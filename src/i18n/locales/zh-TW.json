@@ -8,7 +8,8 @@
     "rosDisconnected": "ROS 未連線"
   },
   "nav": {
-    "vehicleInfo": "車輛資訊"
+    "vehicleInfo": "車輛資訊",
+    "missionInfo": "任務資訊"
   },
   "status": {
     "open": "開啟",
@@ -84,5 +85,9 @@
     "current_height": "現在高度",
     "set_clamp": "設定夾具",
     "current_clamp": "現在夾具"
+  },
+  "mission": {
+    "title": "任務資訊",
+    "empty": "尚無任務資料"
   }
 }

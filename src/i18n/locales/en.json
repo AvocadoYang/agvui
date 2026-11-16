@@ -8,7 +8,8 @@
     "rosDisconnected": "ROS disconnected"
   },
   "nav": {
-    "vehicleInfo": "Vehicle Info"
+    "vehicleInfo": "Vehicle Info",
+    "missionInfo": "Mission Info"
   },
   "status": {
     "open": "On",
@@ -84,5 +85,9 @@
     "current_height": "Current Height",
     "set_clamp": "Set Clamp",
     "current_clamp": "Current Clamp"
+  },
+  "mission": {
+    "title": "Mission Info",
+    "empty": "No mission data yet"
   }
 }

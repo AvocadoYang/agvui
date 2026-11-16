@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import { DashboardOutlined } from '@ant-design/icons'
+import { DashboardOutlined, ProfileOutlined } from '@ant-design/icons'
+import MissionInfoPage from './pages/MissionInfo/MissionInfoPage'
 import VehicleInfoPage from './pages/VehicleInfo/VehicleInfoPage'
 
 export interface AppRoute {
@@ -13,4 +14,5 @@ export interface AppRoute {
 /** 新增頁面：在這裡加一筆，header 選單會自動出現 */
 export const APP_ROUTES: AppRoute[] = [
   { path: '/', labelKey: 'nav.vehicleInfo', icon: <DashboardOutlined />, element: <VehicleInfoPage /> },
+  { path: '/mission', labelKey: 'nav.missionInfo', icon: <ProfileOutlined />, element: <MissionInfoPage /> },
 ]
