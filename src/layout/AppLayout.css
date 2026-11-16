@@ -1,0 +1,50 @@
+.app-layout {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 100%;
+}
+.app-logo img {
+  height: 64px;
+  width: auto;
+  display: block;
+}
+
+.app-menu.ant-menu-horizontal {
+  flex: 1;
+  min-width: 0; /* 讓選單能縮、溢出時收進 ⋯ */
+  border-bottom: none;
+  background: transparent;
+}
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 575px) {
+  .app-header {
+    gap: 8px;
+  }
+  .app-logo img {
+    height: 52px;
+  }
+}

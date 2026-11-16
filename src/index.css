@@ -1,0 +1,46 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ---------- 主題色（淺色 / 深色），由 ThemeProvider 設定 data-theme ---------- */
+:root {
+  --app-bg: #f5f7fa;
+  --app-surface: #ffffff;
+  --app-border: #edf0f4;
+  --app-border-dashed: #eef0f3;
+  --app-text: #1f2937;
+  --app-text-secondary: #5b6474;
+  --app-text-muted: #8a94a6;
+  --app-primary: #2f6fed;
+  --app-primary-soft: #eef3ff;
+  --app-primary-softer: #f4f7ff;
+  --app-error: #ff4d4f;
+  --app-warning: #d48806;
+}
+
+:root[data-theme='dark'] {
+  --app-bg: #0f141b;
+  --app-surface: #171d26;
+  --app-border: #263040;
+  --app-border-dashed: #232c3a;
+  --app-text: #e6e9ef;
+  --app-text-secondary: #a3acbb;
+  --app-text-muted: #7d8799;
+  --app-primary: #5b8ff9;
+  --app-primary-soft: #1c2a47;
+  --app-primary-softer: #18233a;
+  --app-error: #ff6b6b;
+  --app-warning: #e8b339;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--app-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}

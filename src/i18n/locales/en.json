@@ -1,0 +1,88 @@
+{
+  "app": {
+    "title": "AGV Monitor",
+    "language": "Language",
+    "darkMode": "Switch to dark mode",
+    "lightMode": "Switch to light mode",
+    "rosConnected": "ROS connected",
+    "rosDisconnected": "ROS disconnected"
+  },
+  "nav": {
+    "vehicleInfo": "Vehicle Info"
+  },
+  "status": {
+    "open": "On",
+    "close": "Off",
+    "trigger": "Triggered",
+    "noTrigger": "Normal",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "auto": "Auto",
+    "maintenance": "Maintenance"
+  },
+  "vehicle": {
+    "title": "Vehicle Info",
+    "amr": "AMR {{id}}",
+    "summary": {
+      "firmware": "Firmware",
+      "mode": "Mode",
+      "battery": "Battery",
+      "alarms": "Alarms"
+    },
+    "waitingData": "Waiting for {{topic}}…",
+    "rosNotConnected": "Not connected to ROS. Data will appear once connected.",
+    "alarmsActive": "Triggered: {{list}}",
+    "listSeparator": ", "
+  },
+  "sections": {
+    "firmware": "Firmware State",
+    "sensor": "Sensors",
+    "tip": "Fork Tip",
+    "baffle": "Baffle",
+    "ultrasound": "Ultrasonic",
+    "battery": "Battery",
+    "lidar": "Lidar",
+    "speed": "Velocity",
+    "fork": "Fork"
+  },
+  "fields": {
+    "heartBeatSignal": "Firmware Connection",
+    "manual_mode": "Auto / Maintenance Mode",
+    "recovery": "Recovery Switch",
+    "enable_reboot": "Reboot Switch",
+    "emergency_stop": "Emergency Button",
+    "bumper": "Bumper",
+    "enable_tip": "Tip Switch",
+    "tip_left": "Tip (Left)",
+    "tip_right": "Tip (Right)",
+    "enable_baffle": "Baffle Switch",
+    "baffle_left": "Baffle (Left)",
+    "baffle_right": "Baffle (Right)",
+    "enable_ultrasound": "Ultrasonic Switch",
+    "enable_ultrasound_front": "Ultrasonic (Front)",
+    "enable_ultrasound_side": "Ultrasonic (Side)",
+    "ultrasound": "Ultrasonic Readings",
+    "charging": "Charging",
+    "enforce_charge": "Enforce Charge",
+    "set_charge": "Charge Switch",
+    "battery": "Battery",
+    "voltage": "Voltage",
+    "current": "Current",
+    "enable_2d_lidar": "Obstacle Avoidance",
+    "front_2d_layer": "Front 2D Lidar Layer",
+    "obstacle_2d_signal": "Front 2D Obstacle",
+    "obstacle_2d_left_layer": "Front 2D Obstacle (Left)",
+    "obstacle_2d_right_layer": "Front 2D Obstacle (Right)",
+    "enable_rear_2d_lidar": "Rear 2D Avoidance",
+    "obstacle_rear_2d_signal": "Rear 2D Obstacle",
+    "obstacle_3d_signal": "3D Obstacle",
+    "set_linear_x": "Set Forward Speed",
+    "set_angular_z": "Set Turn Speed",
+    "odom_linear_x": "Odom Forward Speed",
+    "odom_angular_z": "Odom Turn Speed",
+    "set_height": "Set Height",
+    "current_height": "Current Height",
+    "set_clamp": "Set Clamp",
+    "current_clamp": "Current Clamp"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "app": {
+    "title": "AGV 監控",
+    "language": "語言",
+    "darkMode": "切換為深色模式",
+    "lightMode": "切換為淺色模式",
+    "rosConnected": "ROS 已連線",
+    "rosDisconnected": "ROS 未連線"
+  },
+  "nav": {
+    "vehicleInfo": "車輛資訊"
+  },
+  "status": {
+    "open": "開啟",
+    "close": "關閉",
+    "trigger": "觸發",
+    "noTrigger": "無觸發",
+    "connected": "已連線",
+    "disconnected": "連線中斷",
+    "auto": "自動",
+    "maintenance": "維修模式"
+  },
+  "vehicle": {
+    "title": "車輛資訊",
+    "amr": "AMR {{id}}",
+    "summary": {
+      "firmware": "韌體板",
+      "mode": "模式",
+      "battery": "電量",
+      "alarms": "警報"
+    },
+    "waitingData": "等待 {{topic}} 資料…",
+    "rosNotConnected": "尚未連上 ROS，資料將在連線後顯示",
+    "alarmsActive": "觸發中：{{list}}",
+    "listSeparator": "、"
+  },
+  "sections": {
+    "firmware": "韌體狀態",
+    "sensor": "感測器",
+    "tip": "枒杈尖",
+    "baffle": "擋板",
+    "ultrasound": "超聲波",
+    "battery": "電池",
+    "lidar": "光達",
+    "speed": "速度",
+    "fork": "枒杈"
+  },
+  "fields": {
+    "heartBeatSignal": "與韌體板連線狀況",
+    "manual_mode": "自動模式/維修模式",
+    "recovery": "覆歸開關",
+    "enable_reboot": "重啟開關",
+    "emergency_stop": "緊急按鈕訊號",
+    "bumper": "防撞邊條訊號",
+    "enable_tip": "枒杈尖開關",
+    "tip_left": "枒杈尖(左)",
+    "tip_right": "枒杈尖(右)",
+    "enable_baffle": "擋板開關",
+    "baffle_left": "擋板(左)",
+    "baffle_right": "擋板(右)",
+    "enable_ultrasound": "超聲波開關",
+    "enable_ultrasound_front": "超聲波(前方)",
+    "enable_ultrasound_side": "超聲波(側邊)",
+    "ultrasound": "超聲波數值",
+    "charging": "充電中",
+    "enforce_charge": "手動充電",
+    "set_charge": "充電開關",
+    "battery": "電量",
+    "voltage": "電壓",
+    "current": "電流",
+    "enable_2d_lidar": "避障開關",
+    "front_2d_layer": "前方 2D 光達圖層",
+    "obstacle_2d_signal": "前方 2D 障礙物偵測",
+    "obstacle_2d_left_layer": "前方(左) 2D 障礙物",
+    "obstacle_2d_right_layer": "前方(右) 2D 障礙物",
+    "enable_rear_2d_lidar": "後方 2D 避障開關",
+    "obstacle_rear_2d_signal": "後方 2D 障礙物偵測",
+    "obstacle_3d_signal": "3D 障礙物偵測",
+    "set_linear_x": "設定前進速度",
+    "set_angular_z": "設定轉彎速度",
+    "odom_linear_x": "里程計前進速度",
+    "odom_angular_z": "里程計轉彎速度",
+    "set_height": "設定高度",
+    "current_height": "現在高度",
+    "set_clamp": "設定夾具",
+    "current_clamp": "現在夾具"
+  }
+}
