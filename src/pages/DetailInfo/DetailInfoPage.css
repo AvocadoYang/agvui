@@ -162,3 +162,31 @@
 .di-group .di-rows {
   padding-left: 8px;
 }
+
+/* ---------- error_info 警告清單 ---------- */
+.di-warnings.has-warnings {
+  border-color: var(--app-error);
+}
+.di-warning-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+.di-warning-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 6px 0;
+  color: var(--app-error);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.di-warning-list li + li {
+  border-top: 1px dashed var(--app-border);
+}
+.di-warning-list .ant-tag {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}

@@ -27,6 +27,9 @@
   /usr/bin/python3 scripts/mock_ros.py --action F,B,clamp          # 依序輪播
   /usr/bin/python3 scripts/mock_ros.py --action all --step 3       # 所有動作輪播
   /usr/bin/python3 scripts/mock_ros.py --action list               # 列出可用的動作代碼
+
+  # 固定送出 N 則 error_info warning（看警告清單用，可跟其他參數一起用）
+  /usr/bin/python3 scripts/mock_ros.py --warnings 8
 """
 import argparse
 import copy
@@ -151,6 +154,21 @@ ERRORS = [
     [(101, "前方有障礙物，等待通過")],
     [],
     [(205, "取貨失敗：未偵測到棧板"), (310, "電池電壓偏低")],
+]
+
+
+# --warnings N：從這裡依序取 N 則（超過就循環）
+SAMPLE_WARNINGS = [
+    (101, "前方有障礙物，等待通過"),
+    (205, "取貨失敗：未偵測到棧板"),
+    (310, "電池電壓偏低"),
+    (402, "後方 2D 光達訊號不穩定"),
+    (517, "枒杈高度與設定值誤差過大"),
+    (623, "夾具未完全張開"),
+    (734, "定位分數偏低，請確認環境"),
+    (845, "與車隊管理系統連線延遲過高"),
+    (912, "超聲波感測器讀值異常跳動"),
+    (999, "任務逾時，等待人員確認"),
 ]
 
 
@@ -282,6 +300,11 @@ class MockRos:
         return msg
 
     def error_info(self, elapsed):
+        if self.args.warnings:
+            n = self.args.warnings
+            errors = [SAMPLE_WARNINGS[i % len(SAMPLE_WARNINGS)] for i in range(n)]
+            self.log_once("error", f"[error_info] 固定 {n} 則 warning")
+            return {"warning_id": [i for i, _ in errors], "warning_msg": [m for _, m in errors]}
         errors = rotate(ERRORS, elapsed, 11) if self.args.demo else []
         if self.args.demo:
             self.log_once("error", f"[error_info] {[m for _, m in errors] or '無'}")
@@ -463,6 +486,7 @@ def main():
         metavar="CODES",
         help="只模擬指定動作，逗號分隔（例：S 或 F,B,clamp），all = 全部輪播，list = 列出代碼",
     )
+    parser.add_argument("--warnings", type=int, default=0, metavar="N", help="固定送出 N 則 error_info warning")
     args = parser.parse_args(rospy.myargv()[1:])
 
     if args.action == "list":

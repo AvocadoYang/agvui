@@ -35,17 +35,30 @@
       "waiting": "Waiting for data"
     },
     "checks": {
-      "position": "Localization",
-      "chargingStation": "Charging station",
-      "firmware": "Firmware",
-      "lidar2dFront": "Front 2D LiDAR",
-      "lidar2dRear": "Rear 2D LiDAR",
-      "lidar3d": "3D LiDAR",
-      "forkTip": "Fork tip sensor",
-      "baffle": "Baffle",
-      "eStop": "E-Stop",
-      "antiCollision": "Bumper strip",
-      "batteryTemp": "Battery temperature"
+      "position": "Localization correct",
+      "chargingStation": "Charging station connected",
+      "firmware": "Firmware connected",
+      "lidar2dFront": "Front 2D LiDAR enabled",
+      "lidar2dRear": "Rear 2D LiDAR enabled",
+      "lidar3d": "3D LiDAR enabled",
+      "forkTip": "Fork tip sensor enabled",
+      "baffle": "Baffle opened",
+      "eStop": "E-Stop enabled",
+      "antiCollision": "Bumper strip detection enabled",
+      "batteryTemp": "Battery temperature normal"
+    },
+    "checksOff": {
+      "position": "Localization error",
+      "chargingStation": "Charging station not connected",
+      "firmware": "Firmware not connected",
+      "lidar2dFront": "Front 2D LiDAR not enabled",
+      "lidar2dRear": "Rear 2D LiDAR not enabled",
+      "lidar3d": "3D LiDAR not enabled",
+      "forkTip": "Fork tip sensor not enabled",
+      "baffle": "Baffle not opened",
+      "eStop": "E-Stop not enabled",
+      "antiCollision": "Bumper strip detection not enabled",
+      "batteryTemp": "Battery temperature abnormal"
     },
     "card": {
       "mode": "Mode:",
@@ -53,7 +66,14 @@
       "battery": "Battery:",
       "charging": "Charging",
       "onMission": "Running",
-      "idle": "Idle"
+      "idle": "Idle",
+      "alert": "Warning",
+      "destination": "Heading to {{end}}",
+      "position": "Localization:",
+      "positionOk": "OK",
+      "positionBad": "Error",
+      "warningsTitle": "Warnings",
+      "noWarnings": "No warnings"
     },
     "light": {
       "ok": "OK",
@@ -72,7 +92,11 @@
     "waitingData": "Waiting for {{topic}}…",
     "rosNotConnected": "Not connected to ROS. Data will appear once connected.",
     "alarmsActive": "Triggered: {{list}}",
-    "listSeparator": ", "
+    "listSeparator": ", ",
+    "warnings": {
+      "title": "Warnings",
+      "none": "No warnings"
+    }
   },
   "sections": {
     "firmware": "Firmware State",

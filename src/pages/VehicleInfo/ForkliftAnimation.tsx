@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { CameraFilled } from '@ant-design/icons'
+import { Tooltip } from 'antd'
+import { CameraFilled, EnvironmentFilled } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 import { useThemeMode } from '../../hooks/useThemeMode'
 
 /**
@@ -13,6 +15,9 @@ import { useThemeMode } from '../../hooks/useThemeMode'
  *   verity_cargo / cargo_limit   影像辨識：靜態叉車 + 右上角相機
  *   其他 / 無任務    靜態圖（沒任務時微跳動）
  *   ROS / 資料沒進來 整個反灰
+ *   移動中有終點      藍色座標立在車子前進方向的地板虛線上（前進在左、後退在右）
+ *   error_info 有 warning      黃黑標誌 + 黃光
+ *   設備連線異常 / 異常回饋    紅白標誌 + 紅光（優先）
  *
  * 每組圖都有 light / dark 兩版，跟著主題切換。
  */
@@ -43,8 +48,7 @@ const pick = (list: string[], name: string) => list.find((src) => src.includes(n
 const still = (theme: Theme) => pick(FRAMES[theme].spin, '_045')
 const side = (theme: Theme) => pick(FRAMES[theme].fork, 'nocargo_frame2')
 
-const reducedMotion =
-  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+const reducedMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
 type Anim =
   | { kind: 'still'; src: string }
@@ -63,7 +67,7 @@ function animFor(action: string | null | undefined, theme: Theme): Anim {
       return { kind: 'move', src: side(theme), dir: 'backward' }
     case 'S':
     case 'SH':
-      return { kind: 'frames', frames: f.spin, interval: 150, pingpong: false }
+      return { kind: 'frames', frames: f.spin, interval: 350, pingpong: false }
     case 'H':
     case 'tilt':
     case 'fork_height':
@@ -102,6 +106,26 @@ function FrameLoop({ frames, interval, pingpong }: { frames: string[]; interval:
   )
 }
 
+export type AlertLevel = 'error' | 'warning'
+
+/** 三角警示標誌：warning = 黃底黑框，error = 白底紅框 */
+function WarningSign({ level }: { level: AlertLevel }) {
+  const isError = level === 'error'
+  return (
+    <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden focusable="false">
+      <path
+        d="M10.3 3.4a2 2 0 0 1 3.4 0l8.4 14.6A2 2 0 0 1 20.4 21H3.6a2 2 0 0 1-1.7-3L10.3 3.4Z"
+        fill={isError ? '#fff' : '#ffc107'}
+        stroke={isError ? '#e8132b' : '#111'}
+        strokeWidth={isError ? 2.4 : 1.6}
+        strokeLinejoin="round"
+      />
+      <rect x="10.9" y="8" width="2.2" height="7" rx="1.1" fill="#111" />
+      <circle cx="12" cy="17.7" r="1.25" fill="#111" />
+    </svg>
+  )
+}
+
 interface Props {
   action: string | null | undefined
   label?: string
@@ -109,9 +133,24 @@ interface Props {
   offline?: boolean
   /** 已連線且沒有任務：靜態圖微跳動 */
   idle?: boolean
+  /** 警示等級：error = 紅白標誌 + 紅光，warning = 黃黑標誌 + 黃光 */
+  alertLevel?: AlertLevel | null
+  /** 警示原因，滑過標誌時列出 */
+  warnings?: string[]
+  /** 移動中的終點（mission_status.end） */
+  destination?: string | null
 }
 
-export function ForkliftAnimation({ action, label, offline = false, idle = false }: Props) {
+export function ForkliftAnimation({
+  action,
+  label,
+  offline = false,
+  idle = false,
+  alertLevel = null,
+  warnings = [],
+  destination,
+}: Props) {
+  const { t } = useTranslation()
   const { isDark } = useThemeMode()
   const theme: Theme = isDark ? 'dark' : 'light'
   const anim = animFor(offline ? null : action, theme)
@@ -143,13 +182,52 @@ export function ForkliftAnimation({ action, label, offline = false, idle = false
       content = <img src={anim.src} alt="" />
   }
 
+  const alert = alertLevel != null
+  const classes = ['vc-avatar']
+  if (offline) classes.push('is-offline')
+  else if (idle && anim.kind === 'still') classes.push('is-idle')
+  if (alert) classes.push('is-alert', `is-${alertLevel}`)
+  // 地板虛線畫在整個 avatar 底部，從車子一路延伸到終點
+  if (anim.kind === 'move') classes.push('is-moving', `is-${anim.dir}`)
+
+  // 終點只在移動動畫時顯示，放在前進方向那一側
+  const target =
+    anim.kind === 'move' && destination ? (
+      <span className={`vc-target is-${anim.dir}`} title={t('vehicle.card.destination', { end: destination })}>
+        <span className="vc-target-name">{destination}</span>
+        <EnvironmentFilled className="vc-target-pin" />
+      </span>
+    ) : null
+
   return (
-    <div
-      className={`vc-avatar ${offline ? 'is-offline' : idle && anim.kind === 'still' ? 'is-idle' : ''}`}
-      role="img"
-      aria-label={label}
-    >
-      {content}
+    <div className={classes.join(' ')}>
+      {target}
+      <span className="vc-stage">
+        {/* 發光放在外層，才不會跟跳動 / 前後晃的 transform 動畫互相蓋掉 */}
+        <span className="vc-figure" role="img" aria-label={label}>
+          {content}
+        </span>
+        {alertLevel && (
+          <Tooltip
+            title={
+              <ul className="vc-alert-list">
+                {warnings.map((w) => (
+                  <li key={w}>{w}</li>
+                ))}
+              </ul>
+            }
+          >
+            <span
+              className="vc-alert-badge"
+              role="button"
+              tabIndex={0}
+              aria-label={`${t('vehicle.card.alert')}：${warnings.join('、')}`}
+            >
+              <WarningSign level={alertLevel} />
+            </span>
+          </Tooltip>
+        )}
+      </span>
     </div>
   )
 }

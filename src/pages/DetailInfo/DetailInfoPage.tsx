@@ -1,20 +1,22 @@
 import type { ReactNode } from 'react'
-import { Alert, Card, Masonry, Progress, Typography } from 'antd'
+import { Alert, Badge, Card, Masonry, Progress, Tag, Typography } from 'antd'
 import {
   ApiOutlined,
   AimOutlined,
   ColumnHeightOutlined,
   DashboardOutlined,
+  ExclamationCircleOutlined,
   RadarChartOutlined,
   ThunderboltOutlined,
   WarningOutlined,
 } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
-import { useIoInfo, useMissionReadStatus, useRos } from '../../hooks/useRos'
+import { useErrorInfo, useIoInfo, useMissionReadStatus, useRos } from '../../hooks/useRos'
 import { TOPICS } from '../../ros/topics'
 import { SECTIONS, activeAlarms, type RowDef, type SectionDef, type SectionKey } from './sections'
 import { StatusValue } from './StatusValue'
 import { batteryColor } from '../../utils/battery'
+import { errorWarnings } from '../../utils/errorInfo'
 import './DetailInfoPage.css'
 
 const SECTION_ICONS: Record<SectionKey, ReactNode> = {
@@ -30,6 +32,8 @@ export default function DetailInfoPage() {
   const { t } = useTranslation()
   const { connected } = useRos()
   const io = useIoInfo()
+  const errorInfo = useErrorInfo()
+  const warnings = errorWarnings(errorInfo)
   const readStatus = useMissionReadStatus()
   const amrId = readStatus?.info.amr_id ?? null
   const battery = io?.battery_info?.battery ?? null
@@ -125,6 +129,38 @@ export default function DetailInfoPage() {
       {alarms.length > 0 && (
         <Alert type="error" showIcon icon={<WarningOutlined />} title={t('detail.alarmsActive', { list: alarms.map((k) => t(k)).join(t('detail.listSeparator')) })} />
       )}
+
+      {/* /kenmec_fork/error_info：條列 warning_msg */}
+      <Card
+        size="small"
+        className={`di-card di-warnings ${warnings.length ? 'has-warnings' : ''}`}
+        title={
+          <span className="di-card-title">
+            <span className="di-card-icon">
+              <ExclamationCircleOutlined />
+            </span>
+            {t('detail.warnings.title')}
+            {warnings.length > 0 && <Badge count={warnings.length} />}
+          </span>
+        }
+      >
+        {!errorInfo ? (
+          <Typography.Text type="secondary">
+            {connected ? t('detail.waitingData', { topic: TOPICS.errorInfo.name }) : t('detail.rosNotConnected')}
+          </Typography.Text>
+        ) : warnings.length === 0 ? (
+          <Typography.Text type="secondary">{t('detail.warnings.none')}</Typography.Text>
+        ) : (
+          <ol className="di-warning-list">
+            {warnings.map((w, i) => (
+              <li key={`${w.id}-${i}`}>
+                {w.id != null && <Tag color="error">{w.id}</Tag>}
+                <span>{w.msg}</span>
+              </li>
+            ))}
+          </ol>
+        )}
+      </Card>
 
       <Masonry
         columns={{ xs: 1, md: 2, xl: 3 }}

@@ -3,29 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useRos, useVehicleStatus } from '../../hooks/useRos'
 import { TOPICS } from '../../ros/topics'
 import type { VehicleStatus } from '../../ros/types'
+import { DEVICE_CHECKS, type CheckDef } from './checks'
 import { VehicleCard } from './VehicleCard'
 import './VehicleInfoPage.css'
 
 /* ---------- 設備連線狀態 ---------- */
-
-interface CheckDef {
-  key: string
-  ok: (s: VehicleStatus) => boolean
-}
-
-const CHECKS: CheckDef[] = [
-  { key: 'position', ok: (s) => s.vehicle_connected_and_position_correct },
-  { key: 'chargingStation', ok: (s) => s.charging_station_connected },
-  { key: 'firmware', ok: (s) => s.firmware_status_connected },
-  { key: 'lidar2dFront', ok: (s) => !!s.front_2d_lidar?.enable_2d_lidar },
-  { key: 'lidar2dRear', ok: (s) => !!s.rear_2d_lidar?.enable_2d_lidar },
-  { key: 'lidar3d', ok: (s) => s.front_3d_lidar_enabled },
-  { key: 'forkTip', ok: (s) => !!s.fork_tip?.enable_tip },
-  { key: 'baffle', ok: (s) => !!s.baffle?.enable_baffle },
-  { key: 'eStop', ok: (s) => s.e_stop_enabled },
-  { key: 'antiCollision', ok: (s) => s.anti_collision_strip_enabled },
-  { key: 'batteryTemp', ok: (s) => s.battery_temperature_normal },
-]
 
 /** 狀態燈：綠 = 正常、紅 = 異常、灰 = 尚未收到資料 */
 function CheckTile({ def, status }: { def: CheckDef; status: VehicleStatus | null }) {
@@ -80,7 +62,7 @@ export default function VehicleInfoPage() {
         <VehicleCard vehicle={vehicle} />
         {!vehicle && waiting(TOPICS.vehicleStatus.name)}
         <div className="vi-checks">
-          {CHECKS.map((def) => (
+          {DEVICE_CHECKS.map((def) => (
             <CheckTile key={def.key} def={def} status={vehicle} />
           ))}
         </div>

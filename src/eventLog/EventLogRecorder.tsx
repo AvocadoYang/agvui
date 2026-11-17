@@ -1,19 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { useErrorInfo, useIoInfo, useRos } from '../hooks/useRos'
 import { activeAlarms } from '../pages/DetailInfo/sections'
-import type { ErrorInfo } from '../ros/types'
+import { errorMessages } from '../utils/errorInfo'
 import { eventLogStore, type NewLogEntry } from './eventLogStore'
-
-const toArray = <T,>(v: T | T[] | undefined | null): T[] => (v == null ? [] : Array.isArray(v) ? v : [v])
-
-/** error_info 有兩種形狀（見 types.ts），統一成「[id] 訊息」字串陣列 */
-function errorMessages(info: ErrorInfo): string[] {
-  const src = info.data ?? info
-  const ids = toArray(src.warning_id)
-  return toArray(src.warning_msg)
-    .map((msg, i) => (ids[i] != null ? `[${ids[i]}] ${msg}` : String(msg)))
-    .filter((m) => m.trim() !== '')
-}
 
 interface IoSnapshot {
   alarms: Set<string>

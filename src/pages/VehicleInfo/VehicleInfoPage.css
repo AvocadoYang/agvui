@@ -87,24 +87,37 @@
 }
 
 /* ---------- 車輛卡片 ---------- */
+.vc-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+/* 寬螢幕：左邊車輛卡片、右邊 warning 清單，各半 */
+@media (min-width: 768px) {
+  .vc-top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 .vc {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 14px 16px;
-  margin: 0 auto 12px;
+  gap: 28px;
+  padding: 14px 20px 14px 16px;
   border: 1px solid var(--app-border);
   border-radius: 10px;
   background: var(--app-surface);
 }
-/* 寬螢幕縮成一半寬並置中；手機維持滿版 */
-@media (min-width: 768px) {
-  .vc {
-    width: 50%;
-  }
-}
 .vc-avatar {
+  position: relative;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+/* 車子本體的框：徽章、地面虛線都以這裡定位 */
+.vc-stage {
+  position: relative;
   display: grid;
   place-items: center;
   width: 96px;
@@ -158,6 +171,11 @@
 .vc-chip.is-success {
   color: var(--app-success);
   border-color: var(--app-success);
+}
+.vc-chip.is-error {
+  color: var(--app-error);
+  border-color: var(--app-error);
+  background: var(--app-error-soft);
 }
 /* action_process 原字串 */
 .vc-action {
@@ -248,6 +266,7 @@
 }
 
 .vc-abnormal {
+  margin: -4px 0 8px;
   font-size: 12px;
   font-weight: 600;
   color: var(--app-error);
@@ -276,13 +295,115 @@
     gap: 10px;
     padding: 10px;
   }
-  .vc-avatar {
+  .vc-stage {
     width: 72px;
     height: 60px;
   }
   .vc-avatar img {
     width: 64px;
     height: 54px;
+  }
+}
+
+/* ---------- 右側 warning 清單（error_info） ---------- */
+.vc-warn-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  background: var(--app-surface);
+}
+.vc-warn-panel.has-items {
+  border-color: #faad14;
+  background: linear-gradient(rgba(250, 173, 20, 0.08), rgba(250, 173, 20, 0.08)), var(--app-surface);
+}
+.vc-warn-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--app-text-secondary);
+}
+.vc-warn-head-icon {
+  color: var(--app-text-muted);
+}
+.has-items .vc-warn-head-icon {
+  color: #faad14;
+}
+.vc-warn-count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  color: #111;
+  background: #ffc107;
+}
+.vc-warn-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--app-text-muted);
+}
+.vc-warnings {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  max-height: 200px; /* 清單太長就在框內捲動 */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.vc-warnings li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  padding: 5px 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--app-text);
+}
+.vc-warnings li + li {
+  border-top: 1px dashed var(--app-border);
+}
+.vc-warning-id {
+  flex-shrink: 0;
+  min-width: 34px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: #111;
+  background: #ffc107;
+}
+.vc-warning-msg {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* 很寬的螢幕：清單排成兩欄，8 則只要 4 行 */
+@media (min-width: 1200px) {
+  .vc-warnings {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+    column-gap: 16px;
+  }
+  .vc-warnings li + li {
+    border-top: none;
+  }
+  .vc-warnings li:nth-child(n + 3) {
+    border-top: 1px dashed var(--app-border);
   }
 }
 
@@ -297,9 +418,8 @@
 }
 
 /* ---------- 叉車動畫 ---------- */
-.vc-avatar {
-  position: relative;
-  overflow: hidden;
+.vc-figure {
+  display: block;
 }
 /* 逐格：所有圖疊在一起，只顯示目前那格 */
 .vc-frames {
@@ -323,18 +443,19 @@
 .vc-move.is-backward img {
   animation-name: vc-drive-backward;
 }
-.vc-move::after {
+/* 地板虛線：畫在整個 avatar 底部，有終點時會延伸到終點座標下方 */
+.vc-avatar.is-moving::after {
   content: '';
   position: absolute;
-  left: 6px;
-  right: 6px;
+  left: 0;
+  right: 0;
   bottom: 6px;
   height: 2px;
   opacity: 0.6;
   background: repeating-linear-gradient(90deg, var(--app-text-muted) 0 6px, transparent 6px 14px);
   animation: vc-ground-forward 0.4s linear infinite;
 }
-.vc-move.is-backward::after {
+.vc-avatar.is-moving.is-backward::after {
   animation-name: vc-ground-backward;
 }
 /* 圖上枒杈朝右：前進 = 往左（車頭方向），後退 = 往右（枒杈方向） */
@@ -395,6 +516,46 @@
   }
 }
 
+/* 終點：藍色座標，放在前進方向那一側 */
+.vc-target {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end; /* 座標尖端立在地板虛線上 */
+  gap: 2px;
+  max-width: 64px;
+  padding-bottom: 7px;
+}
+.vc-target.is-backward {
+  order: 1; /* 後退 = 往枒杈方向（右） */
+}
+.vc-target-pin {
+  line-height: 0;
+  font-size: 20px;
+  color: var(--app-primary);
+  filter: drop-shadow(0 2px 2px rgba(22, 119, 255, 0.35));
+  animation: vc-pin-drop 1.2s ease-in-out infinite;
+}
+.vc-target-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--app-text);
+}
+@keyframes vc-pin-drop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
 /* ROS / 資料沒進來：反灰 */
 .vc-avatar.is-offline img {
   filter: grayscale(1);
@@ -421,10 +582,61 @@
   }
 }
 
+/* 警示：車身紅色微光 + 左上角警示圖示 */
+.vc-avatar.is-alert {
+  --vc-glow: 255, 77, 79; /* error：紅光 */
+}
+.vc-avatar.is-warning {
+  --vc-glow: 250, 173, 20; /* warning：黃光 */
+}
+.vc-avatar.is-alert .vc-figure {
+  animation: vc-glow 1.6s ease-in-out infinite;
+}
+@keyframes vc-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px rgba(var(--vc-glow), 0.45));
+  }
+  50% {
+    filter: drop-shadow(0 0 7px rgba(var(--vc-glow), 0.95));
+  }
+}
+.vc-alert-badge {
+  position: absolute;
+  top: -8px;
+  left: -4px;
+  display: block;
+  width: 26px;
+  height: 26px;
+  line-height: 0;
+  cursor: help;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+  animation: vc-alert-pop 1.6s ease-in-out infinite;
+}
+@keyframes vc-alert-pop {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+.vc-alert-list {
+  margin: 0;
+  padding-left: 16px;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .vc-avatar.is-alert .vc-figure {
+    animation: none;
+    filter: drop-shadow(0 0 5px rgba(var(--vc-glow), 0.8));
+  }
+  .vc-alert-badge,
+  .vc-target-pin,
   .vc-avatar.is-idle img,
   .vc-move img,
-  .vc-move::after,
+  .vc-avatar.is-moving::after,
   .vc-camera-badge {
     animation: none;
   }
