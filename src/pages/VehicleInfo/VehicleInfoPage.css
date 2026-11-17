@@ -40,64 +40,392 @@
 
 .vi-check {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border: 1px solid var(--app-border);
   border-radius: 10px;
   background: var(--app-surface);
   min-width: 0;
+  transition:
+    opacity 0.3s ease,
+    filter 0.3s ease;
 }
-.vi-check.is-bad {
-  border-color: var(--app-error);
-  background: var(--app-error-soft);
-}
-.vi-check-icon {
-  font-size: 18px;
-  line-height: 1;
-  margin-top: 2px;
-  color: var(--app-text-muted);
-}
-.vi-check.is-ok .vi-check-icon {
-  color: var(--app-success);
-}
-.vi-check.is-bad .vi-check-icon {
-  color: var(--app-error);
-}
-.vi-check-body {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
+/* 尚未收到資料：整格反灰 */
+.vi-check.is-idle {
+  opacity: 0.45;
+  filter: grayscale(1);
 }
 .vi-check-label {
-  font-size: 12px;
-  color: var(--app-text-secondary);
-}
-.vi-check-value {
+  flex: 1;
+  min-width: 0;
   font-size: 15px;
   font-weight: 600;
   color: var(--app-text);
 }
-.vi-check.is-bad .vi-check-value {
-  color: var(--app-error);
+/* 狀態燈 */
+.vi-light {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--app-text-muted);
 }
-.vi-check-detail {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 10px;
-  font-size: 12px;
+.vi-light.is-on {
+  background: #52c41a;
+  box-shadow: 0 0 6px rgba(82, 196, 26, 0.7);
 }
-.vi-check-detail .is-on {
-  color: var(--app-text-muted);
-}
-.vi-check-detail .is-off {
-  color: var(--app-error);
-  font-weight: 600;
+.vi-light.is-off {
+  background: #ff4d4f;
+  box-shadow: 0 0 6px rgba(255, 77, 79, 0.7);
 }
 
 @media (max-width: 400px) {
   .vi-page {
     padding: 8px;
+  }
+}
+
+/* ---------- 車輛卡片 ---------- */
+.vc {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  margin: 0 auto 12px;
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  background: var(--app-surface);
+}
+/* 寬螢幕縮成一半寬並置中；手機維持滿版 */
+@media (min-width: 768px) {
+  .vc {
+    width: 50%;
+  }
+}
+.vc-avatar {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 80px;
+}
+.vc-avatar img {
+  display: block;
+  width: 84px;
+  height: 72px;
+  object-fit: contain;
+}
+.vc-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 模式 / 任務 */
+.vc-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.vc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--app-text-secondary);
+  background: var(--app-bg);
+  border: 1px solid var(--app-border);
+}
+.vc-chip-label {
+  font-weight: 400;
+  color: var(--app-text-muted);
+}
+.vc-chip.is-primary {
+  color: var(--app-primary);
+  border-color: var(--app-primary);
+  background: var(--app-primary-softer);
+}
+.vc-chip.is-warning {
+  color: var(--app-warning);
+  border-color: var(--app-warning);
+}
+.vc-chip.is-success {
+  color: var(--app-success);
+  border-color: var(--app-success);
+}
+/* action_process 原字串 */
+.vc-action {
+  margin-left: 2px;
+  padding: 0 6px;
+  border-left: 1px solid currentColor;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 600;
+}
+.vc-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--app-success);
+  animation: vc-pulse 1.6s ease-in-out infinite;
+}
+
+/* 電量：標籤 + 電池外型 + 百分比 */
+.vc-battery {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vc-battery-label {
+  font-size: 13px;
+  color: var(--app-text-muted);
+  white-space: nowrap;
+}
+/* 小電池圖示 */
+.vc-batt {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+.vc-batt-body {
+  width: 30px;
+  height: 15px;
+  padding: 2px;
+  border: 1.5px solid var(--app-text-muted);
+  border-radius: 4px;
+}
+.vc-batt-fill {
+  display: block;
+  height: 100%;
+  border-radius: 1.5px;
+  background-color: var(--app-border);
+  transition:
+    width 0.4s ease,
+    background-color 0.4s ease;
+}
+/* 充電中：斜紋往右流動 */
+.vc-batt-fill.is-charging {
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.35) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0.35) 75%,
+    transparent 75%
+  );
+  background-size: 8px 8px;
+  animation: vc-stripes 1s linear infinite;
+}
+.vc-batt-cap {
+  width: 2.5px;
+  height: 6px;
+  margin-left: 1px;
+  border-radius: 0 2px 2px 0;
+  background: var(--app-text-muted);
+}
+.vc-battery-value {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--app-text);
+}
+.vc-battery-value small {
+  margin-left: 1px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.vc-charging {
+  font-size: 16px;
+  color: var(--app-success);
+}
+
+.vc-abnormal {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--app-error);
+  overflow-wrap: anywhere;
+}
+
+@keyframes vc-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes vc-stripes {
+  to {
+    background-position: 8px 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vc-dot,
+  .vc-batt-fill.is-charging {
+    animation: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .vc {
+    gap: 10px;
+    padding: 10px;
+  }
+  .vc-avatar {
+    width: 72px;
+    height: 60px;
+  }
+  .vc-avatar img {
+    width: 64px;
+    height: 54px;
+  }
+}
+
+/* 時間（原本在 header） */
+.vc-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--app-text-secondary);
+  font-variant-numeric: tabular-nums; /* 數字等寬，跳秒時不會左右抖動 */
+}
+
+/* ---------- 叉車動畫 ---------- */
+.vc-avatar {
+  position: relative;
+  overflow: hidden;
+}
+/* 逐格：所有圖疊在一起，只顯示目前那格 */
+.vc-frames {
+  display: grid;
+}
+.vc-frames img {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+.vc-frames img.is-active {
+  visibility: visible;
+}
+
+/* 前進 / 後退：車身前後晃 + 地面虛線往反方向流 */
+.vc-move {
+  display: block;
+}
+.vc-move img {
+  animation: vc-drive-forward 0.9s ease-in-out infinite;
+}
+.vc-move.is-backward img {
+  animation-name: vc-drive-backward;
+}
+.vc-move::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  height: 2px;
+  opacity: 0.6;
+  background: repeating-linear-gradient(90deg, var(--app-text-muted) 0 6px, transparent 6px 14px);
+  animation: vc-ground-forward 0.4s linear infinite;
+}
+.vc-move.is-backward::after {
+  animation-name: vc-ground-backward;
+}
+/* 圖上枒杈朝右：前進 = 往左（車頭方向），後退 = 往右（枒杈方向） */
+@keyframes vc-drive-forward {
+  0%,
+  100% {
+    transform: translateX(3px);
+  }
+  50% {
+    transform: translate(-4px, -1px);
+  }
+}
+@keyframes vc-drive-backward {
+  0%,
+  100% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translate(4px, -1px);
+  }
+}
+@keyframes vc-ground-forward {
+  to {
+    background-position: 14px 0;
+  }
+}
+@keyframes vc-ground-backward {
+  to {
+    background-position: -14px 0;
+  }
+}
+
+/* 影像辨識：右上角相機閃爍 */
+.vc-camera {
+  display: block;
+}
+.vc-camera-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 12px;
+  color: #fff;
+  background: var(--app-primary);
+  animation: vc-cam 1.2s ease-in-out infinite;
+}
+@keyframes vc-cam {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(22, 119, 255, 0.55);
+  }
+  60% {
+    box-shadow: 0 0 0 6px rgba(22, 119, 255, 0);
+  }
+}
+
+/* ROS / 資料沒進來：反灰 */
+.vc-avatar.is-offline img {
+  filter: grayscale(1);
+  opacity: 0.4;
+}
+/* 已連線、沒任務：微跳動 */
+.vc-avatar.is-idle img {
+  animation: vc-idle-bob 2.4s ease-in-out infinite;
+}
+@keyframes vc-idle-bob {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  70% {
+    transform: translateY(-4px);
+  }
+  80% {
+    transform: translateY(0);
+  }
+  88% {
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vc-avatar.is-idle img,
+  .vc-move img,
+  .vc-move::after,
+  .vc-camera-badge {
+    animation: none;
   }
 }

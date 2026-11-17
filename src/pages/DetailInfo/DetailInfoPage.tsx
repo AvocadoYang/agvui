@@ -14,6 +14,7 @@ import { useIoInfo, useMissionReadStatus, useRos } from '../../hooks/useRos'
 import { TOPICS } from '../../ros/topics'
 import { SECTIONS, activeAlarms, type RowDef, type SectionDef, type SectionKey } from './sections'
 import { StatusValue } from './StatusValue'
+import { batteryColor } from '../../utils/battery'
 import './DetailInfoPage.css'
 
 const SECTION_ICONS: Record<SectionKey, ReactNode> = {
@@ -23,12 +24,6 @@ const SECTION_ICONS: Record<SectionKey, ReactNode> = {
   lidar: <RadarChartOutlined />,
   speed: <DashboardOutlined />,
   fork: <ColumnHeightOutlined />,
-}
-
-function batteryColor(pct: number) {
-  if (pct < 20) return '#ff4d4f'
-  if (pct < 40) return '#faad14'
-  return '#52c41a'
 }
 
 export default function DetailInfoPage() {

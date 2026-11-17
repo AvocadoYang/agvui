@@ -38,7 +38,8 @@
       "position": "定位狀況",
       "chargingStation": "充電站",
       "firmware": "韌體狀態",
-      "lidar2d": "2D 光達",
+      "lidar2dFront": "前方 2D 光達",
+      "lidar2dRear": "後方 2D 光達",
       "lidar3d": "3D 光達",
       "forkTip": "杈尖傳感器",
       "baffle": "擋板",
@@ -46,17 +47,17 @@
       "antiCollision": "防撞邊條偵測",
       "batteryTemp": "電池工作溫度"
     },
-    "values": {
-      "correct": "正確",
-      "incorrect": "異常",
-      "connected": "已連線",
-      "disconnected": "未連線",
-      "started": "已啟動",
-      "notStarted": "未啟動",
-      "opened": "已開啟",
-      "notOpened": "未開啟",
-      "normal": "正常",
-      "abnormal": "異常"
+    "card": {
+      "mode": "模式：",
+      "mission": "任務：",
+      "battery": "電量：",
+      "charging": "充電中",
+      "onMission": "任務中",
+      "idle": "待命"
+    },
+    "light": {
+      "ok": "正常",
+      "bad": "異常"
     }
   },
   "detail": {
@@ -152,7 +153,7 @@
       "H": "枒杈調整",
       "S": "旋轉",
       "SH": "旋轉加枒杈調整",
-      "title": "調整傾角",
+      "tilt": "調整傾角",
       "clamp": "調整夾具",
       "fork_height": "調整高度",
       "verity_cargo": "影像貨物分類",

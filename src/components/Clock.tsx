@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Typography } from 'antd'
 
 // 格式：11/17/2026, 8:26:33 AM
 const formatter = new Intl.DateTimeFormat('en-US', {
@@ -12,7 +11,8 @@ const formatter = new Intl.DateTimeFormat('en-US', {
   hour12: true,
 })
 
-export default function HeaderClock() {
+/** 每秒更新的時鐘，只重繪自己 */
+export default function Clock({ className }: { className?: string }) {
   const [now, setNow] = useState(() => new Date())
 
   useEffect(() => {
@@ -29,8 +29,8 @@ export default function HeaderClock() {
   }, [])
 
   return (
-    <Typography.Text className="app-clock" type="secondary">
-      <time dateTime={now.toISOString()}>{formatter.format(now)}</time>
-    </Typography.Text>
+    <time className={className} dateTime={now.toISOString()}>
+      {formatter.format(now)}
+    </time>
   )
 }

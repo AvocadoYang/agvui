@@ -21,6 +21,12 @@
   /usr/bin/python3 scripts/mock_ros.py --interval 1    # 改成每 1 秒
   /usr/bin/python3 scripts/mock_ros.py --demo          # 加上輪流出現的異常、警報、錯誤訊息
   /usr/bin/python3 scripts/mock_ros.py --step 6        # 每個任務步驟停留 6 秒（預設 4）
+
+  # 只模擬指定動作（看車輛卡片的動畫用），每個動作停留 --step 秒後換下一個
+  /usr/bin/python3 scripts/mock_ros.py --action S                  # 一直旋轉
+  /usr/bin/python3 scripts/mock_ros.py --action F,B,clamp          # 依序輪播
+  /usr/bin/python3 scripts/mock_ros.py --action all --step 3       # 所有動作輪播
+  /usr/bin/python3 scripts/mock_ros.py --action list               # 列出可用的動作代碼
 """
 import argparse
 import copy
@@ -58,6 +64,35 @@ STEPS = [
     ("fork_height", "fork", 0.0, 0.0, 0, "調整高度"),
     ("charge", "charge", 0.0, 0.0, 0, "充電"),
 ]
+
+# --action 可用的動作：code -> (operation.type, 前進速度, 轉彎速度, 牙叉高度 mm, 說明)
+ACTIONS = {
+    "F": ("move", 0.8, 0.0, 0, "前進"),
+    "B": ("move", -0.5, 0.0, 0, "後退"),
+    "FH": ("move", 0.3, 0.0, 300, "前進加枒杈調整"),
+    "BH": ("move", -0.3, 0.0, 300, "後退加枒杈調整"),
+    "S": ("spin", 0.0, 0.5, 0, "旋轉"),
+    "SH": ("spin", 0.0, -0.4, 600, "旋轉加枒杈調整"),
+    "H": ("fork", 0.0, 0.0, 500, "枒杈調整"),
+    "tilt": ("fork", 0.0, 0.0, 500, "調整傾角"),
+    "fork_height": ("fork", 0.0, 0.0, 800, "調整高度"),
+    "clamp": ("clamp", 0.0, 0.0, 500, "調整夾具"),
+    "verity_cargo": ("camera", 0.0, 0.0, 500, "影像貨物分類"),
+    "cargo_limit": ("camera", 0.0, 0.0, 500, "貨物高度檢測"),
+    "load": ("load", 0.0, 0.0, 800, "取貨"),
+    "offload": ("offload", 0.0, 0.0, 100, "放貨"),
+    "charge": ("charge", 0.0, 0.0, 0, "充電"),
+}
+
+
+def build_steps(spec):
+    """--action 參數 → 步驟清單（格式同 STEPS）"""
+    codes = list(ACTIONS) if spec == "all" else [c.strip() for c in spec.split(",") if c.strip()]
+    unknown = [c for c in codes if c not in ACTIONS]
+    if unknown or not codes:
+        raise SystemExit(f"未知的動作代碼：{', '.join(unknown) or '(空)'}；可用：{', '.join(ACTIONS)}")
+    return [(c, *ACTIONS[c]) for c in codes]
+
 
 MISSION_NAMES = ["A01", "B03", "C07"]
 LOCATIONS = ["Station-1", "Rack-12", "Rack-27", "Charger-1"]
@@ -132,6 +167,9 @@ def rotate(items, elapsed, period):
 class MockRos:
     def __init__(self, args):
         self.args = args
+        self.steps = build_steps(args.action) if args.action else STEPS
+        # 第一個有任務的步驟 = 新的一輪任務開始
+        self.first_mission_step = next(i for i, step in enumerate(self.steps) if step[0])
         self.start = rospy.get_time()
         self.battery = 85.0
         self.goal_seq = 0
@@ -165,12 +203,12 @@ class MockRos:
             rospy.loginfo(text)
 
     def step(self, elapsed):
-        idx = int(elapsed // self.args.step) % len(STEPS)
+        idx = int(elapsed // self.args.step) % len(self.steps)
         if idx != self.last_step:
-            if idx == 1:
+            if idx == self.first_mission_step:
                 self.goal_seq += 1  # 新的一輪任務
             self.last_step = idx
-        code, op_type, vx, wz, height, desc = STEPS[idx]
+        code, op_type, vx, wz, height, desc = self.steps[idx]
         progress = (elapsed % self.args.step) / self.args.step
         return idx, code, op_type, vx, wz, height, desc, progress
 
@@ -420,11 +458,26 @@ def main():
     parser.add_argument("--interval", type=float, default=0.5, help="發送間隔秒數（預設 0.5）")
     parser.add_argument("--step", type=float, default=4.0, help="每個任務步驟停留秒數（預設 4）")
     parser.add_argument("--demo", action="store_true", help="加上輪流出現的異常、警報、錯誤訊息")
+    parser.add_argument(
+        "--action",
+        metavar="CODES",
+        help="只模擬指定動作，逗號分隔（例：S 或 F,B,clamp），all = 全部輪播，list = 列出代碼",
+    )
     args = parser.parse_args(rospy.myargv()[1:])
+
+    if args.action == "list":
+        for code, (_, _, _, _, desc) in ACTIONS.items():
+            print(f"  {code:<14}{desc}")
+        return
+    if args.action:
+        build_steps(args.action)  # 先檢查代碼，打錯字就不用等 ROS 初始化
 
     rospy.init_node("mock_ros", anonymous=True)
     mock = MockRos(args)
-    rospy.loginfo(f"mock_ros 開始發送：每 {args.interval}s，步驟 {args.step}s，demo={args.demo}")
+    rospy.loginfo(
+        f"mock_ros 開始發送：每 {args.interval}s，步驟 {args.step}s，demo={args.demo}，"
+        f"動作={','.join(s[0] for s in mock.steps if s[0]) if args.action else '預設劇本'}"
+    )
 
     rate = rospy.Rate(1.0 / args.interval)
     while not rospy.is_shutdown():

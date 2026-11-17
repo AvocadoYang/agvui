@@ -8,7 +8,6 @@ import { useRos } from '../hooks/useRos'
 import { useThemeMode } from '../hooks/useThemeMode'
 import { LANGUAGES } from '../i18n'
 import { APP_ROUTES } from '../routes'
-import HeaderClock from './HeaderClock'
 import './AppLayout.css'
 
 export default function AppLayout() {
@@ -42,7 +41,6 @@ export default function AppLayout() {
         />
 
         <div className="app-header-right">
-          {screens.md && <HeaderClock />}
           <Tooltip title={screens.sm ? undefined : rosText}>
             <Badge status={connected ? 'success' : 'error'} text={screens.sm ? rosText : undefined} />
           </Tooltip>

@@ -289,7 +289,7 @@ export interface VehicleStatus {
 /**
  * move : F 前進, B後退, FH 前進加枒杈調整, BH 後退加枒杈調整
  * spin : S 選轉, SH 選轉加枒杈調整
- * fork : title 調整傾角, clamp 調整夾具, fork_height 調整高度
+ * fork : tilt 調整傾角, clamp 調整夾具, fork_height 調整高度
  * cargo: verity_cargo 影像貨物分類, cargo_limit 貨物高度檢測
  */
 

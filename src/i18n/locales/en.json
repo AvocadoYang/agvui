@@ -38,7 +38,8 @@
       "position": "Localization",
       "chargingStation": "Charging station",
       "firmware": "Firmware",
-      "lidar2d": "2D LiDAR",
+      "lidar2dFront": "Front 2D LiDAR",
+      "lidar2dRear": "Rear 2D LiDAR",
       "lidar3d": "3D LiDAR",
       "forkTip": "Fork tip sensor",
       "baffle": "Baffle",
@@ -46,17 +47,17 @@
       "antiCollision": "Bumper strip",
       "batteryTemp": "Battery temperature"
     },
-    "values": {
-      "correct": "Correct",
-      "incorrect": "Abnormal",
-      "connected": "Connected",
-      "disconnected": "Disconnected",
-      "started": "On",
-      "notStarted": "Off",
-      "opened": "Open",
-      "notOpened": "Closed",
-      "normal": "Normal",
-      "abnormal": "Abnormal"
+    "card": {
+      "mode": "Mode:",
+      "mission": "Mission:",
+      "battery": "Battery:",
+      "charging": "Charging",
+      "onMission": "Running",
+      "idle": "Idle"
+    },
+    "light": {
+      "ok": "OK",
+      "bad": "Fault"
     }
   },
   "detail": {
@@ -152,7 +153,7 @@
       "H": "Fork adjust",
       "S": "Spin",
       "SH": "Spin + fork adjust",
-      "title": "Adjust tilt",
+      "tilt": "Adjust tilt",
       "clamp": "Adjust clamp",
       "fork_height": "Adjust height",
       "verity_cargo": "Cargo classification",
