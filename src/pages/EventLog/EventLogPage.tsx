@@ -94,9 +94,9 @@ export default function EventLogPage() {
   return (
     <div className="el-page">
       <header className="el-header">
-        <Typography.Title level={4} className="el-title">
+        {/* <Typography.Title level={4} className="el-title">
           {t('log.title')}
-        </Typography.Title>
+        </Typography.Title> */}
         <Typography.Text type="secondary">{t('log.storageNote', { max: MAX_LOG_ENTRIES })}</Typography.Text>
       </header>
 

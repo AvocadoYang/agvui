@@ -1,4 +1,4 @@
-import { Badge, Card, Empty, Typography } from 'antd'
+import { Badge, Card, Empty } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useRos, useVehicleStatus } from '../../hooks/useRos'
 import { TOPICS } from '../../ros/topics'
@@ -41,9 +41,9 @@ export default function VehicleInfoPage() {
   return (
     <div className="vi-page">
       <header className="vi-header">
-        <Typography.Title level={4} className="vi-title">
+        {/* <Typography.Title level={4} className="vi-title">
           {t('vehicle.title')}
-        </Typography.Title>
+        </Typography.Title> */}
       </header>
 
       {/* /kenmec_fork/vehicle_status */}

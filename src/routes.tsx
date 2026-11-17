@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
-import { DashboardOutlined, FileSearchOutlined, HistoryOutlined, ProfileOutlined } from '@ant-design/icons'
+import { DashboardOutlined, FileSearchOutlined, HistoryOutlined } from '@ant-design/icons'
 import DetailInfoPage from './pages/DetailInfo/DetailInfoPage'
 import EventLogPage from './pages/EventLog/EventLogPage'
-import MissionInfoPage from './pages/MissionInfo/MissionInfoPage'
+// import MissionInfoPage from './pages/MissionInfo/MissionInfoPage'
 import VehicleInfoPage from './pages/VehicleInfo/VehicleInfoPage'
 
 export interface AppRoute {
@@ -17,6 +17,6 @@ export interface AppRoute {
 export const APP_ROUTES: AppRoute[] = [
   { path: '/', labelKey: 'nav.vehicleInfo', icon: <DashboardOutlined />, element: <VehicleInfoPage /> },
   { path: '/detail', labelKey: 'nav.detailInfo', icon: <FileSearchOutlined />, element: <DetailInfoPage /> },
-  { path: '/mission', labelKey: 'nav.missionInfo', icon: <ProfileOutlined />, element: <MissionInfoPage /> },
+  // { path: '/mission', labelKey: 'nav.missionInfo', icon: <ProfileOutlined />, element: <MissionInfoPage /> },
   { path: '/log', labelKey: 'nav.log', icon: <HistoryOutlined />, element: <EventLogPage /> },
 ]

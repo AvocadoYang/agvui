@@ -11,7 +11,7 @@ import {
   WarningOutlined,
 } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
-import { useErrorInfo, useIoInfo, useMissionReadStatus, useRos } from '../../hooks/useRos'
+import { useErrorInfo, useIoInfo, useRos } from '../../hooks/useRos'
 import { TOPICS } from '../../ros/topics'
 import { SECTIONS, activeAlarms, type RowDef, type SectionDef, type SectionKey } from './sections'
 import { StatusValue } from './StatusValue'
@@ -34,8 +34,8 @@ export default function DetailInfoPage() {
   const io = useIoInfo()
   const errorInfo = useErrorInfo()
   const warnings = errorWarnings(errorInfo)
-  const readStatus = useMissionReadStatus()
-  const amrId = readStatus?.info.amr_id ?? null
+  // const readStatus = useMissionReadStatus()
+  // const amrId = readStatus?.info.amr_id ?? null
   const battery = io?.battery_info?.battery ?? null
   const isAuto = io ? Number(io.manual_mode) !== 0 : null
   const alarms = io ? activeAlarms(io) : []
@@ -87,10 +87,10 @@ export default function DetailInfoPage() {
     <div className="di-page">
       {/* ROS 連線狀態已移到全站 header */}
       <header className="di-header">
-        <Typography.Title level={4} className="di-title">
+        {/* <Typography.Title level={4} className="di-title">
           {t('detail.title')}
         </Typography.Title>
-        <Typography.Text type="secondary">{t('detail.amr', { id: amrId ?? '—' })}</Typography.Text>
+        <Typography.Text type="secondary">{t('detail.amr', { id: amrId ?? '—' })}</Typography.Text> */}
       </header>
 
       {/* 一眼看重點：小螢幕 2×2，寬螢幕 1×4 */}
