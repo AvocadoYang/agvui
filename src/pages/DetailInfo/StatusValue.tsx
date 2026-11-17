@@ -11,16 +11,16 @@ export function StatusValue({ value }: { value: RowValue | null }) {
   switch (value.kind) {
     case 'alarm':
       return (
-        <span className="vi-value">
+        <span className="di-value">
           <Badge
             status={value.triggered ? 'error' : 'success'}
             text={
-              <span className={value.triggered ? 'vi-strong vi-error' : undefined}>
+              <span className={value.triggered ? 'di-strong di-error' : undefined}>
                 {t(value.triggered ? 'status.trigger' : 'status.noTrigger')}
               </span>
             }
           />
-          {value.note && <span className="vi-note">{value.note}</span>}
+          {value.note && <span className="di-note">{value.note}</span>}
         </span>
       )
     case 'switch':
@@ -31,7 +31,7 @@ export function StatusValue({ value }: { value: RowValue | null }) {
         <Badge
           status={value.ok ? 'success' : tone}
           text={
-            <span className={value.ok ? undefined : `vi-strong vi-${tone}`}>
+            <span className={value.ok ? undefined : `di-strong di-${tone}`}>
               {t(value.ok ? value.okText : value.badText)}
             </span>
           }
@@ -39,6 +39,6 @@ export function StatusValue({ value }: { value: RowValue | null }) {
       )
     }
     case 'text':
-      return <span className={value.mono ? 'vi-num vi-mono' : 'vi-num'}>{value.text}</span>
+      return <span className={value.mono ? 'di-num di-mono' : 'di-num'}>{value.text}</span>
   }
 }

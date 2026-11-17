@@ -1,0 +1,13 @@
+// "mission_status" 欄位對照表
+// 位置：/mission_control/write/status → action.mission_status（見 src/ros/types.ts 的 MissionWriteStatus）
+{
+  "mission_status": {
+    "feedback_id": "",          // string
+    "name": [],                 // string[]
+    "start": "",                // string
+    "end": "",                  // string
+    "bookBlock": null,          // string[] | null
+    "load_level": null,         // number | null（選填，可能不送）
+    "offload_level": null       // number | null（選填，可能不送）
+  }
+}

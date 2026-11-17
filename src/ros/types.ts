@@ -10,6 +10,10 @@ export interface StdString {
   data: string
 }
 
+export interface StdBool {
+  data: boolean
+}
+
 export interface Vector3 {
   x: number
   y: number
@@ -23,8 +27,44 @@ export interface Quaternion {
   w: number
 }
 
+/** ROS1 用 secs/nsecs，ROS2 用 sec/nanosec */
+export interface RosTime {
+  sec?: number
+  secs?: number
+  nanosec?: number
+  nsecs?: number
+}
+
+export interface Header {
+  seq?: number
+  frame_id: string
+  stamp: RosTime
+}
+
+/** actionlib_msgs/GoalStatus.status */
+export const GoalStatusCode = {
+  PENDING: 0,
+  ACTIVE: 1,
+  PREEMPTED: 2,
+  SUCCEEDED: 3,
+  ABORTED: 4,
+  REJECTED: 5,
+  PREEMPTING: 6,
+  RECALLING: 7,
+  RECALLED: 8,
+  LOST: 9,
+} as const
+export type GoalStatusCode = (typeof GoalStatusCode)[keyof typeof GoalStatusCode]
+
+/** actionlib_msgs/GoalStatus */
+export interface GoalStatus {
+  goal_id: { stamp: RosTime; id: string }
+  status: GoalStatusCode
+  text: string
+}
+
 export interface Odometry {
-  header: { frame_id: string; stamp: { sec?: number; secs?: number; nanosec?: number; nsecs?: number } }
+  header: Header
   child_frame_id: string
   pose: { pose: { position: Vector3; orientation: Quaternion }; covariance: number[] }
   twist: { twist: { linear: Vector3; angular: Vector3 }; covariance: number[] }
@@ -121,7 +161,15 @@ export interface MissionWriteStatus {
       camera: { execute: boolean; config: number; modify_dis: number }
     }
     cargo_limit: { load: number; offload: number }
-    mission_status: { name: string[]; start: string; end: string }
+    mission_status: {
+      feedback_id: string
+      name: string[]
+      start: string
+      end: string
+      bookBlock: string[] | null
+      load_level?: number | null
+      offload_level?: number | null
+    }
   }
   [key: string]: unknown
 }
@@ -182,6 +230,96 @@ export interface IoInfo {
     current_clamp: number
   }
   [key: string]: unknown
+}
+
+/* ---------- /kenmec_fork/vehicle_status ---------- */
+/* 欄位對照見 src/cheat_sheet/kenmec_fork_vehicle_status.jsonc，障礙物類欄位 true = 偵測到障礙物 */
+
+export interface VehicleStatus {
+  /** 車輛是否連線、位置是否正確 */
+  vehicle_connected_and_position_correct: boolean
+  /** 充電站是否連線 */
+  charging_station_connected: boolean
+  /** 韌體狀態是否連線 */
+  firmware_status_connected: boolean
+  front_2d_lidar: {
+    enable_2d_lidar: boolean
+    obstacle_2d_left: boolean
+    obstacle_2d_right: boolean
+    front_2d_layer: number
+  }
+  /** 前方 3D 避障光達是否開啟 */
+  front_3d_lidar_enabled: boolean
+  rear_2d_lidar: {
+    enable_2d_lidar: boolean
+    obstacle_2d_rear: boolean
+    rear_2d_layer: number
+    /** true = 開啟 mute */
+    mute_status: boolean
+  }
+  fork_tip: {
+    enable_tip: boolean
+    left_tip: boolean
+    right_tip: boolean
+  }
+  baffle: {
+    enable_baffle: boolean
+    baffle_left: number
+    baffle_right: number
+  }
+  /** 防撞邊條是否開啟 */
+  anti_collision_strip_enabled: boolean
+  /** E-Stop 是否開啟 */
+  e_stop_enabled: boolean
+  /** 是否為自動模式 */
+  auto_mode_enabled: boolean
+  /** 電量是否低於 35% */
+  battery_below_35_percent: boolean
+  /** 電池工作溫度是否正常 */
+  battery_temperature_normal: boolean
+  /** 異常回饋，空字串 = 無異常 */
+  abnormal_feedback: string
+  [key: string]: unknown
+}
+
+/* ---------- /kenmec_fork/fleet_manager/mission/feedback ---------- */
+
+
+
+/**
+ * move : F 前進, B後退, FH 前進加枒杈調整, BH 後退加枒杈調整
+ * spin : S 選轉, SH 選轉加枒杈調整
+ * fork : title 調整傾角, clamp 調整夾具, fork_height 調整高度
+ * cargo: verity_cargo 影像貨物分類, cargo_limit 貨物高度檢測
+ */
+
+/** feedback 內容 */
+export interface MissionFeedback {
+  task_process: number
+  navigation_status: boolean
+  warning: number
+  warning_id: number
+  warning_msg: string
+  is_running: boolean
+  cancel_task: boolean
+  action_process: string // 車輛正在執行的動作 (即時的)
+  task_status: boolean
+  [key: string]: unknown
+}
+
+/** kenmec_fork_socket/MissionActionFeedback（useFeedbackFromAction 回傳此形狀） */
+export interface MissionActionFeedback {
+  header: Header
+  status: GoalStatus
+  feedback: MissionFeedback
+}
+
+/**
+ * 原始訊息：feedback 可能直接是物件，
+ * 也可能依 Mission.action 定義包成 { feedback_json: string }，兩種都接受。
+ */
+export interface MissionActionFeedbackMsg extends Omit<MissionActionFeedback, 'feedback'> {
+  feedback: MissionFeedback | { feedback_json: string }
 }
 
 /* ---------- /kenmec_fork/error_info ---------- */

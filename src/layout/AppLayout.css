@@ -42,6 +42,11 @@
   white-space: nowrap;
 }
 
+.app-clock {
+  margin-right: 8px;
+  font-variant-numeric: tabular-nums; /* 數字等寬，跳秒時不會左右抖動 */
+}
+
 @media (max-width: 575px) {
   .app-header {
     gap: 8px;

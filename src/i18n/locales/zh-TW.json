@@ -9,7 +9,9 @@
   },
   "nav": {
     "vehicleInfo": "車輛資訊",
-    "missionInfo": "任務資訊"
+    "detailInfo": "詳細資訊",
+    "missionInfo": "任務資訊",
+    "log": "紀錄"
   },
   "status": {
     "open": "開啟",
@@ -23,6 +25,42 @@
   },
   "vehicle": {
     "title": "車輛資訊",
+    "waitingData": "等待 {{topic}} 資料…",
+    "rosNotConnected": "尚未連上 ROS，資料將在連線後顯示",
+    "abnormalFeedback": "異常回饋：{{msg}}",
+    "front": "前方",
+    "rear": "後方",
+    "status": {
+      "title": "設備連線狀態",
+      "waiting": "等待資料"
+    },
+    "checks": {
+      "position": "定位狀況",
+      "chargingStation": "充電站",
+      "firmware": "韌體狀態",
+      "lidar2d": "2D 光達",
+      "lidar3d": "3D 光達",
+      "forkTip": "杈尖傳感器",
+      "baffle": "擋板",
+      "eStop": "E-Stop",
+      "antiCollision": "防撞邊條偵測",
+      "batteryTemp": "電池工作溫度"
+    },
+    "values": {
+      "correct": "正確",
+      "incorrect": "異常",
+      "connected": "已連線",
+      "disconnected": "未連線",
+      "started": "已啟動",
+      "notStarted": "未啟動",
+      "opened": "已開啟",
+      "notOpened": "未開啟",
+      "normal": "正常",
+      "abnormal": "異常"
+    }
+  },
+  "detail": {
+    "title": "詳細資訊",
     "amr": "AMR {{id}}",
     "summary": {
       "firmware": "韌體板",
@@ -88,6 +126,82 @@
   },
   "mission": {
     "title": "任務資訊",
-    "empty": "尚無任務資料"
+    "waitingData": "等待 {{topic}} 資料…",
+    "rosNotConnected": "尚未連上 ROS，資料將在連線後顯示",
+    "status": {
+      "title": "任務狀態",
+      "currentAction": "目前動作",
+      "noAction": "無動作",
+      "name": "任務名稱",
+      "start": "起點",
+      "end": "終點",
+      "operation": "動作類型",
+      "charge": "充電任務",
+      "state": {
+        "idle": "待命",
+        "running": "執行中",
+        "paused": "暫停",
+        "cancel": "取消"
+      }
+    },
+    "actions": {
+      "F": "前進",
+      "B": "後退",
+      "FH": "前進加枒杈調整",
+      "BH": "後退加枒杈調整",
+      "H": "枒杈調整",
+      "S": "旋轉",
+      "SH": "旋轉加枒杈調整",
+      "title": "調整傾角",
+      "clamp": "調整夾具",
+      "fork_height": "調整高度",
+      "verity_cargo": "影像貨物分類",
+      "cargo_limit": "貨物高度檢測",
+      "charge": "充電",
+      "load": "取貨",
+      "offload": "放貨"
+    }
+  },
+  "log": {
+    "title": "事件紀錄",
+    "storageNote": "紀錄只存在這台瀏覽器，最多保留 {{max}} 筆",
+    "empty": "尚無紀錄",
+    "searchPlaceholder": "搜尋訊息",
+    "allCategories": "全部類型",
+    "export": "匯出 CSV",
+    "clear": "清除紀錄",
+    "clearConfirm": "確定要清除所有紀錄？",
+    "count": "共 {{count}} 筆",
+    "columns": {
+      "time": "時間",
+      "level": "等級",
+      "category": "類型",
+      "message": "訊息"
+    },
+    "level": {
+      "error": "異常",
+      "warning": "警告",
+      "info": "資訊",
+      "success": "恢復"
+    },
+    "category": {
+      "alarm": "警報",
+      "error": "錯誤訊息",
+      "firmware": "韌體板",
+      "mode": "模式",
+      "ros": "ROS 連線"
+    },
+    "msg": {
+      "alarmTriggered": "{{name}} 觸發",
+      "alarmCleared": "{{name}} 已解除",
+      "errorRaised": "{{name}}",
+      "errorCleared": "已解除：{{name}}",
+      "firmwareConnected": "韌體板已連線",
+      "firmwareDisconnected": "韌體板連線中斷",
+      "modeAuto": "切換為自動模式",
+      "modeMaintenance": "切換為維修模式",
+      "rosConnected": "ROS 已連線",
+      "rosDisconnected": "ROS 連線中斷"
+    }
   }
 }

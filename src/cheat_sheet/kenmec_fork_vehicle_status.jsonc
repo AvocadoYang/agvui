@@ -1,0 +1,66 @@
+// topic name: /kenmec_fork/vehicle_status
+// msg type: std_msg/String
+
+// "vehicle_status" 欄位對照表（數字為規格項次）
+// 布林值說明：「開啟 / 連線 / 正常」類欄位 true = 是；「障礙物」類欄位 true = 偵測到障礙物
+{
+  // 13. 車輛是否連線、位置是否正確
+  "vehicle_connected_and_position_correct": true,
+
+  // 14. 充電站是否連線
+  "charging_station_connected": true,
+
+  // 15. 韌體狀態是否連線
+  "firmware_status_connected": true,
+
+  // 16. 前方 2D 避障光達
+  "front_2d_lidar": {
+    "enable_2d_lidar": true,    // 是否開啟
+    "obstacle_2d_left": true,   // true: 左側偵測到障礙物
+    "obstacle_2d_right": true,  // true: 右側偵測到障礙物
+    "front_2d_layer": 0         // 避障區域層級
+  },
+
+  // 17. 前方 3D 避障光達是否開啟
+  "front_3d_lidar_enabled": true,
+
+  // 18. 後方 2D 避障光達
+  "rear_2d_lidar": {
+    "enable_2d_lidar": true,    // 是否開啟
+    "obstacle_2d_rear": true,   // true: 後方偵測到障礙物
+    "rear_2d_layer": 0,         // 避障區域層級
+    "mute_status": true         // true: 開啟 mute
+  },
+
+  // 19. 叉尖
+  "fork_tip": {
+    "enable_tip": true,         // 是否開啟
+    "left_tip": true,           // true: 左叉尖偵測到障礙物
+    "right_tip": true           // true: 右叉尖偵測到障礙物
+  },
+
+  // 20. 擋板
+  "baffle": {
+    "enable_baffle": true,      // 是否開啟
+    "baffle_left": 0.0,         // float
+    "baffle_right": 0.0         // float
+  },
+
+  // 21. 防撞邊條是否開啟
+  "anti_collision_strip_enabled": true,
+
+  // 22. E-Stop 是否開啟
+  "e_stop_enabled": true,
+
+  // 23. 是否為自動模式
+  "auto_mode_enabled": true,
+
+  // 24. 電量是否低於 35%
+  "battery_below_35_percent": true,
+
+  // 25. 電池工作溫度是否正常
+  "battery_temperature_normal": true,
+
+  // 異常回饋（空字串 = 無異常）
+  "abnormal_feedback": ""
+}

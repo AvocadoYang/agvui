@@ -18,6 +18,8 @@
   --app-primary-softer: #f4f7ff;
   --app-error: #ff4d4f;
   --app-warning: #d48806;
+  --app-success: #389e0d;
+  --app-error-soft: #fff1f0;
 }
 
 :root[data-theme='dark'] {
@@ -33,6 +35,8 @@
   --app-primary-softer: #18233a;
   --app-error: #ff6b6b;
   --app-warning: #e8b339;
+  --app-success: #6abe39;
+  --app-error-soft: #2a1215;
 }
 
 html,

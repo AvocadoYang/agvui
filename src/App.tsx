@@ -4,6 +4,7 @@ import enUS from 'antd/locale/en_US'
 import zhTW from 'antd/locale/zh_TW'
 import { useTranslation } from 'react-i18next'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router'
+import { EventLogRecorder } from './eventLog/EventLogRecorder'
 import { useThemeMode } from './hooks/useThemeMode'
 import AppLayout from './layout/AppLayout'
 import { APP_ROUTES } from './routes'
@@ -51,6 +52,8 @@ function App() {
 
   return (
     <ConfigProvider theme={theme} locale={i18n.resolvedLanguage === 'en' ? enUS : zhTW}>
+      {/* 全站事件紀錄：放在路由外，切換頁面不會中斷 */}
+      <EventLogRecorder />
       <RouterProvider router={router} />
     </ConfigProvider>
   )

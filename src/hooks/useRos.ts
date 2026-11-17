@@ -63,6 +63,15 @@ export const useMissionWriteStatus = (opts?: UseRosTopicOptions) => useRosTopic(
 /** /kenmec_fork/io_info：IO、電量、手自動模式 */
 export const useIoInfo = (opts?: UseRosTopicOptions) => useRosTopic(TOPICS.ioInfo, opts)
 
+/** /kenmec_fork/vehicle_status：車輛、充電站、韌體連線與各安全裝置狀態 */
+export const useVehicleStatus = (opts?: UseRosTopicOptions) => useRosTopic(TOPICS.vehicleStatus, opts)
+
+/** /kenmec_fork/fleet_manager/mission/feedback：任務 action 的 feedback（目前狀態、動作進度、導航狀態等） */
+export const useFeedbackFromAction = (opts?: UseRosTopicOptions) => useRosTopic(TOPICS.missionFeedback, opts)
+
+/** /kenmec_fork/has_mission：目前是否有任務（null = 尚未收到） */
+export const useHasMission = (opts?: UseRosTopicOptions) => useRosTopic(TOPICS.hasMission, opts)
+
 /** /kenmec_fork/error_info：錯誤碼與訊息 */
 export const useErrorInfo = (opts?: UseRosTopicOptions) => useRosTopic(TOPICS.errorInfo, opts)
 

@@ -1,0 +1,81 @@
+// "io_info" 欄位對照表（topic: /kenmec_fork/io_info，std_msgs/String，data 內為 JSON）
+// 開關類欄位：後端有時送 0/1、有時送 true/false，1 / true = 開啟
+// 警報類欄位：欄位存在且不為 0 即視為觸發；欄位不存在視為未觸發
+{
+  // 與韌體板連線狀況｜0 = 已連線，非 0 = 連線中斷（注意：0 才是正常）
+  "heartBeatSignal": 0,
+
+  // 錯誤碼（UI 目前未顯示）
+  "error_code": 0,
+
+  // 自動 / 維修模式｜0 = 維修（手動），非 0 = 自動
+  "manual_mode": 1,
+
+  // 覆歸開關｜警報
+  "recovery": 0,
+
+  // 重啟開關｜警報
+  "enable_reboot": 0,
+
+  // 緊急按鈕訊號｜警報
+  "emergency_stop": 0,
+
+  // 防撞邊條訊號｜警報
+  "bumper": 0,
+
+  // 手動充電｜非 0 = 開啟
+  "enforce_charge": 0,
+
+  // 枒杈尖
+  "enable_tip": 1,              // 是否開啟
+  "tip_left": 0,                // 枒杈尖(左)｜警報
+  "tip_right": 0,               // 枒杈尖(右)｜警報
+
+  // 擋板
+  "enable_baffle": 1,           // 是否開啟（後端可能不送）
+  "baffle_left": 0,             // 擋板(左) 距離，單位 cm
+  "baffle_right": 0,            // 擋板(右) 距離，單位 cm
+
+  // 超聲波
+  "enable_ultrasound": 1,       // 總開關
+  "enable_ultrasound_front": 1, // 前方是否開啟
+  "enable_ultrasound_side": 1,  // 側邊是否開啟
+  "ultrasound": [],             // 超聲波數值陣列
+
+  // 電池
+  "battery_info": {
+    "set_charge": 0,            // 充電開關｜0 = 開啟（舊版邏輯，注意方向相反）
+    "battery": 85.0,            // 電量，單位 %
+    "voltage": 0.0,             // 電壓，單位 V
+    "current": 0.0,             // 電流，單位 A
+    "charging": 0               // 充電中｜非 0 = 充電中
+  },
+
+  // 光達
+  "lidar": {
+    "enable_2d_lidar": 1,             // 前方 2D 避障是否開啟
+    "front_2d_layer": 0,              // 前方 2D 光達圖層
+    "obstacle_2d_signal": 0,          // 前方 2D 障礙物偵測｜警報
+    "obstacle_2d_left_layer": "000",  // 前方(左) 2D 障礙物｜"111" = 觸發（後端可能不送）
+    "obstacle_2d_right_layer": "000", // 前方(右) 2D 障礙物｜"111" = 觸發（後端可能不送）
+    "enable_rear_2d_lidar": 1,        // 後方 2D 避障是否開啟（後端可能不送）
+    "obstacle_rear_2d_signal": 0,     // 後方 2D 障礙物偵測｜警報
+    "obstacle_3d_signal": 0           // 3D 障礙物偵測｜警報
+  },
+
+  // 速度
+  "twist": {
+    "set_linear_x": 0.0,        // 設定前進速度
+    "set_angular_z": 0.0,       // 設定轉彎速度
+    "odom_linear_x": 0.0,       // 里程計前進速度
+    "odom_angular_z": 0.0       // 里程計轉彎速度
+  },
+
+  // 枒杈
+  "fork": {
+    "set_height": 0,            // 設定高度，單位 mm
+    "current_height": 0,        // 現在高度，單位 mm
+    "set_clamp": 0,             // 設定夾具，單位 mm
+    "current_clamp": 0          // 現在夾具，單位 mm
+  }
+}

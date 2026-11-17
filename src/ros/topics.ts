@@ -1,11 +1,16 @@
 import type {
   ErrorInfo,
   IoInfo,
+  MissionActionFeedback,
+  MissionActionFeedbackMsg,
+  MissionFeedback,
   MissionReadStatus,
   MissionWriteStatus,
   Odometry,
   RobotPose,
+  StdBool,
   StdString,
+  VehicleStatus,
 } from './types'
 
 /** 預設 rosbridge 位址：可用 VITE_ROSBRIDGE_URL 覆蓋，否則連到開網頁的那台主機的 9090 */
@@ -55,6 +60,30 @@ export const TOPICS = {
     messageType: 'std_msgs/String',
     parse: (raw) => parseJsonString<IoInfo>(raw),
   } satisfies TopicDef<StdString, IoInfo | undefined>,
+
+  vehicleStatus: {
+    name: '/kenmec_fork/vehicle_status',
+    messageType: 'std_msgs/String',
+    parse: (raw) => parseJsonString<VehicleStatus>(raw),
+  } satisfies TopicDef<StdString, VehicleStatus | undefined>,
+
+  /** actionlib feedback：feedback 若包成 feedback_json 字串就先解析，解析失敗的訊息略過 */
+  hasMission: {
+    name: '/kenmec_fork/has_mission',
+    messageType: 'std_msgs/Bool',
+    parse: (raw) => raw.data,
+  } satisfies TopicDef<StdBool, boolean>,
+
+  missionFeedback: {
+    name: '/kenmec_fork/fleet_manager/mission/feedback',
+    messageType: 'kenmec_fork_socket/MissionActionFeedback',
+    parse: (raw): MissionActionFeedback | undefined => {
+      const json = raw.feedback.feedback_json
+      const feedback =
+        typeof json === 'string' ? parseJsonString<MissionFeedback>({ data: json }) : (raw.feedback as MissionFeedback)
+      return feedback ? { ...raw, feedback } : undefined
+    },
+  } satisfies TopicDef<MissionActionFeedbackMsg, MissionActionFeedback | undefined>,
 
   errorInfo: {
     name: '/kenmec_fork/error_info',

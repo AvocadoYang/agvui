@@ -9,7 +9,9 @@
   },
   "nav": {
     "vehicleInfo": "Vehicle Info",
-    "missionInfo": "Mission Info"
+    "detailInfo": "Details",
+    "missionInfo": "Mission Info",
+    "log": "Log"
   },
   "status": {
     "open": "On",
@@ -23,6 +25,42 @@
   },
   "vehicle": {
     "title": "Vehicle Info",
+    "waitingData": "Waiting for {{topic}}…",
+    "rosNotConnected": "ROS not connected. Data will appear once connected.",
+    "abnormalFeedback": "Abnormal feedback: {{msg}}",
+    "front": "Front",
+    "rear": "Rear",
+    "status": {
+      "title": "Device Connection Status",
+      "waiting": "Waiting for data"
+    },
+    "checks": {
+      "position": "Localization",
+      "chargingStation": "Charging station",
+      "firmware": "Firmware",
+      "lidar2d": "2D LiDAR",
+      "lidar3d": "3D LiDAR",
+      "forkTip": "Fork tip sensor",
+      "baffle": "Baffle",
+      "eStop": "E-Stop",
+      "antiCollision": "Bumper strip",
+      "batteryTemp": "Battery temperature"
+    },
+    "values": {
+      "correct": "Correct",
+      "incorrect": "Abnormal",
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "started": "On",
+      "notStarted": "Off",
+      "opened": "Open",
+      "notOpened": "Closed",
+      "normal": "Normal",
+      "abnormal": "Abnormal"
+    }
+  },
+  "detail": {
+    "title": "Details",
     "amr": "AMR {{id}}",
     "summary": {
       "firmware": "Firmware",
@@ -88,6 +126,82 @@
   },
   "mission": {
     "title": "Mission Info",
-    "empty": "No mission data yet"
+    "waitingData": "Waiting for {{topic}}…",
+    "rosNotConnected": "ROS not connected. Data will appear once connected.",
+    "status": {
+      "title": "Mission Status",
+      "currentAction": "Current action",
+      "noAction": "No action",
+      "name": "Mission",
+      "start": "From",
+      "end": "To",
+      "operation": "Operation",
+      "charge": "Charging",
+      "state": {
+        "idle": "Idle",
+        "running": "Running",
+        "paused": "Paused",
+        "cancel": "Cancelled"
+      }
+    },
+    "actions": {
+      "F": "Forward",
+      "B": "Backward",
+      "FH": "Forward + fork adjust",
+      "BH": "Backward + fork adjust",
+      "H": "Fork adjust",
+      "S": "Spin",
+      "SH": "Spin + fork adjust",
+      "title": "Adjust tilt",
+      "clamp": "Adjust clamp",
+      "fork_height": "Adjust height",
+      "verity_cargo": "Cargo classification",
+      "cargo_limit": "Cargo height check",
+      "charge": "Charging",
+      "load": "Load",
+      "offload": "Offload"
+    }
+  },
+  "log": {
+    "title": "Event Log",
+    "storageNote": "Stored in this browser only, up to {{max}} entries",
+    "empty": "No events yet",
+    "searchPlaceholder": "Search messages",
+    "allCategories": "All types",
+    "export": "Export CSV",
+    "clear": "Clear log",
+    "clearConfirm": "Clear all log entries?",
+    "count": "{{count}} entries",
+    "columns": {
+      "time": "Time",
+      "level": "Level",
+      "category": "Type",
+      "message": "Message"
+    },
+    "level": {
+      "error": "Error",
+      "warning": "Warning",
+      "info": "Info",
+      "success": "Recovered"
+    },
+    "category": {
+      "alarm": "Alarm",
+      "error": "Error message",
+      "firmware": "Firmware",
+      "mode": "Mode",
+      "ros": "ROS"
+    },
+    "msg": {
+      "alarmTriggered": "{{name}} triggered",
+      "alarmCleared": "{{name}} cleared",
+      "errorRaised": "{{name}}",
+      "errorCleared": "Cleared: {{name}}",
+      "firmwareConnected": "Firmware connected",
+      "firmwareDisconnected": "Firmware disconnected",
+      "modeAuto": "Switched to auto mode",
+      "modeMaintenance": "Switched to maintenance mode",
+      "rosConnected": "ROS connected",
+      "rosDisconnected": "ROS disconnected"
+    }
   }
 }
