@@ -11,7 +11,8 @@
     "vehicleInfo": "Vehicle Info",
     "detailInfo": "Details",
     "missionInfo": "Mission Info",
-    "log": "Log"
+    "log": "Log",
+    "rviz": "RViz"
   },
   "status": {
     "open": "On",
@@ -228,5 +229,44 @@
       "rosConnected": "ROS connected",
       "rosDisconnected": "ROS disconnected"
     }
+  },
+  "rviz": {
+    "status": "Localization",
+    "ndtScore": "NDT score",
+    "locCheck": "Localization check",
+    "hasMission": "On mission",
+    "position": "Position (x, y)",
+    "heading": "Heading",
+    "ok": "OK",
+    "abnormal": "Abnormal",
+    "yes": "Yes",
+    "no": "No",
+    "setPose": "Localization correction",
+    "setPoseStart": "Start correction",
+    "setPoseNote": "A ghost robot appears on the vehicle — drag it to the correct pose and send (same as RViz \"2D Pose Estimate\"). An NDT score of {{score}} or above means localized.",
+    "cancel": "Cancel",
+    "send": "Send",
+    "confirmTitle": "Send this initial pose?",
+    "confirmDesc": "x = {{x}}, y = {{y}}, heading = {{yaw}}°",
+    "sent": "Correction sent (x {{x}}, y {{y}}, {{yaw}}°) — watch the NDT score",
+    "block": {
+      "disconnected": "ROS disconnected",
+      "hasMission": "Mission running, cannot correct",
+      "noPose": "No robot pose yet"
+    },
+    "mapLoadFailed": "Failed to load map ({{url}})",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "fitMap": "Fit map",
+    "followOn": "Follow robot",
+    "followOff": "Stop following",
+    "scan": "Point cloud",
+    "scanPoints": "{{count}} pts",
+    "scanNone": "No data",
+    "scanWaiting": "Waiting for {{topic}} (run web_scan_2d on the robot)",
+    "setPoseScanNote": "The red point cloud follows the ghost — line it up with the map walls before sending.",
+    "hint": "Drag the body to move, drag the purple handle to rotate",
+    "delta": "Offset from current: {{d}} m, {{yaw}}°",
+    "reset": "Reset"
   }
 }

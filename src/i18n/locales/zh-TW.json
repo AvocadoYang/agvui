@@ -11,7 +11,8 @@
     "vehicleInfo": "車輛資訊",
     "detailInfo": "詳細資訊",
     "missionInfo": "任務資訊",
-    "log": "紀錄"
+    "log": "紀錄",
+    "rviz": "RViz"
   },
   "status": {
     "open": "開啟",
@@ -228,5 +229,44 @@
       "rosConnected": "ROS 已連線",
       "rosDisconnected": "ROS 連線中斷"
     }
+  },
+  "rviz": {
+    "status": "定位狀態",
+    "ndtScore": "NDT 分數",
+    "locCheck": "定位檢查",
+    "hasMission": "任務中",
+    "position": "位置 (x, y)",
+    "heading": "車頭方向",
+    "ok": "正常",
+    "abnormal": "異常",
+    "yes": "是",
+    "no": "否",
+    "setPose": "定位校正",
+    "setPoseStart": "開始定位校正",
+    "setPoseNote": "會在車子上方出現幽靈車身，拖曳到正確位置後送出（同 RViz 的「2D Pose Estimate」）。送出後 NDT 分數回到 {{score}} 以上即定位成功。",
+    "cancel": "取消",
+    "send": "送出",
+    "confirmTitle": "確定送出初始位置？",
+    "confirmDesc": "x = {{x}}, y = {{y}}, 方向 = {{yaw}}°",
+    "sent": "已送出定位校正（x {{x}}, y {{y}}, {{yaw}}°），請觀察 NDT 分數",
+    "block": {
+      "disconnected": "ROS 未連線",
+      "hasMission": "任務執行中，無法校正定位",
+      "noPose": "尚未收到車子位置"
+    },
+    "mapLoadFailed": "地圖載入失敗（{{url}}）",
+    "zoomIn": "放大",
+    "zoomOut": "縮小",
+    "fitMap": "顯示整張地圖",
+    "followOn": "跟隨車輛",
+    "followOff": "停止跟隨",
+    "scan": "點雲",
+    "scanPoints": "{{count}} 點",
+    "scanNone": "無資料",
+    "scanWaiting": "等待 {{topic}}（車端需執行 web_scan_2d 節點）",
+    "setPoseScanNote": "紅色點雲會跟著幽靈車身移動，對齊地圖牆面後再送出。",
+    "hint": "拖曳車身移動位置，拖曳紫色把手旋轉方向",
+    "delta": "與目前定位相差 {{d}} m、{{yaw}}°",
+    "reset": "重設"
   }
 }

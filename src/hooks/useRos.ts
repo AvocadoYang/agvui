@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { Topic } from 'roslib'
 import { RosContext, type RosContextValue } from '../ros/RosContext'
 import { TOPICS, type TopicDef } from '../ros/topics'
@@ -32,12 +32,12 @@ export function useRosTopic<Raw, T>(
     parseRef.current = def.parse
   }, [def.parse])
 
-  const { name, messageType, throttleRate = 0 } = def
+  const { name, messageType, throttleRate = 0, compression = 'none' } = def
 
   useEffect(() => {
     if (!ros || !enabled) return undefined
 
-    const topic = new Topic<Raw>({ ros, name, messageType, throttle_rate: throttleRate })
+    const topic = new Topic<Raw>({ ros, name, messageType, throttle_rate: throttleRate, compression })
     const handler = (raw: Raw) => {
         const parsed = parseRef.current(raw)
       if (parsed !== undefined) setValue(parsed)
@@ -47,9 +47,39 @@ export function useRosTopic<Raw, T>(
     return () => {
       topic.unsubscribe(handler)
     }
-  }, [ros, enabled, name, messageType, throttleRate])
+  }, [ros, enabled, name, messageType, throttleRate, compression])
 
   return value
+}
+
+/**
+ * 通用發布 hook。掛載時就先 advertise：ROS1 剛 advertise 時訂閱端還沒連上，
+ * 若等到按下按鈕才 advertise，第一筆訊息可能會掉。
+ * 回傳的 publish() 在未連線時回傳 false。
+ */
+export function useRosPublisher<T>({ name, messageType }: { name: string; messageType: string }) {
+  const { ros, connected } = useRos()
+  const topicRef = useRef<Topic<T> | null>(null)
+
+  useEffect(() => {
+    if (!ros) return undefined
+    const topic = new Topic<T>({ ros, name, messageType, queue_size: 1 })
+    topic.advertise()
+    topicRef.current = topic
+    return () => {
+      topic.unadvertise()
+      topicRef.current = null
+    }
+  }, [ros, name, messageType])
+
+  return useCallback(
+    (msg: T) => {
+      if (!connected || !topicRef.current) return false
+      topicRef.current.publish(msg)
+      return true
+    },
+    [connected],
+  )
 }
 
 /* ---------- 各 topic 專用 hook ---------- */
@@ -77,6 +107,15 @@ export const useErrorInfo = (opts?: UseRosTopicOptions) => useRosTopic(TOPICS.er
 
 /** /hdl_odom：位置 x、y 與 yaw（預設 rosbridge 節流 100ms） */
 export const useRobotPose = (opts?: UseRosTopicOptions) => useRosTopic(TOPICS.odom, opts)
+
+/** /transform_probability：NDT 比對分數 */
+export const useNdtScore = (opts?: UseRosTopicOptions) => useRosTopic(TOPICS.transformProbability, opts)
+
+/** /kenmec_fork/localization_check：true = 定位異常 */
+export const useLocalizationCheck = (opts?: UseRosTopicOptions) => useRosTopic(TOPICS.localizationCheck, opts)
+
+/** /kenmec_fork/web_scan_2d：給地圖頁疊圖用的 2D 點雲（enabled=false 時車端節點也會停止處理） */
+export const useWebScan2d = (opts?: UseRosTopicOptions) => useRosTopic(TOPICS.webScan2d, opts)
 
 /** 一次拿齊常用狀態（整理自舊版 RobotState 元件） */
 export function useAgvStatus() {

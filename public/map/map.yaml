@@ -1,0 +1,7 @@
+# 開發用：複製自車端 config/Map/map.yaml（車端寫的是 map.pgm，瀏覽器只能讀 png）
+image: map.png
+resolution: 0.050000
+origin: [-36.054729, -61.224720, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

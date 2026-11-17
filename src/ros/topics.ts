@@ -9,6 +9,9 @@ import type {
   Odometry,
   RobotPose,
   StdBool,
+  StdFloat32,
+  Float32MultiArray,
+  WebScan2D,
   StdString,
   VehicleStatus,
 } from './types'
@@ -26,6 +29,8 @@ export interface TopicDef<Raw, T> {
   parse: (raw: Raw) => T
   /** rosbridge 端節流（ms），0 = 不節流 */
   throttleRate?: number
+  /** rosbridge 傳輸壓縮；數值陣列多的 topic 用 'cbor'，直接收二進位 typed array */
+  compression?: 'none' | 'cbor'
 }
 
 /** 解析 std_msgs/String 裡的 JSON，壞掉的訊息回傳 undefined（略過，不覆蓋舊值） */
@@ -41,6 +46,15 @@ function parseJsonString<T>(raw: StdString): T | undefined {
 export function quaternionToYaw({ x, y, z, w }: { x: number; y: number; z: number; w: number }): number {
   return Math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
 }
+
+/** 與車端 kenmec_fork_planner/param/pose_listen.yaml 的 `stable` 一致 */
+export const NDT_STABLE_SCORE = 3
+
+/** 發布用 topic */
+export const PUB_TOPICS = {
+  /** 同 RViz「2D Pose Estimate」：ndt_localizer 重新定位；無任務時 fleet_action 會重新綁定站點 */
+  initialPose: { name: '/initialpose', messageType: 'geometry_msgs/PoseWithCovarianceStamped' },
+} as const
 
 export const TOPICS = {
   missionReadStatus: {
@@ -90,6 +104,35 @@ export const TOPICS = {
     messageType: 'std_msgs/String',
     parse: (raw) => parseJsonString<ErrorInfo>(raw),
   } satisfies TopicDef<StdString, ErrorInfo | undefined>,
+
+  /** ndt_localizer 比對分數：越高越好，低於 NDT_STABLE_SCORE 視為定位異常 */
+  transformProbability: {
+    name: '/transform_probability',
+    messageType: 'std_msgs/Float32',
+    throttleRate: 500,
+    parse: (raw) => raw.data,
+  } satisfies TopicDef<StdFloat32, number>,
+
+  /** pos_listener_application 的定位判斷：true = 定位異常 / 漂移 */
+  localizationCheck: {
+    name: '/kenmec_fork/localization_check',
+    messageType: 'std_msgs/Bool',
+    throttleRate: 500,
+    parse: (raw) => raw.data,
+  } satisfies TopicDef<StdBool, boolean>,
+
+  /** 車端 web_scan_2d 節點：已降採樣、轉到 map frame 的 2D 點 [x0, y0, x1, y1, ...] */
+  webScan2d: {
+    name: '/kenmec_fork/web_scan_2d',
+    messageType: 'std_msgs/Float32MultiArray',
+    compression: 'cbor',
+    parse: (raw): WebScan2D | undefined => {
+      // cbor 時是 Float32Array，JSON 時是 number[]
+      const points = raw.data instanceof Float32Array ? raw.data : Float32Array.from(raw.data)
+      if (points.length % 2 !== 0) return undefined
+      return { points, frame: raw.layout?.dim?.[0]?.label || 'map', receivedAt: Date.now() }
+    },
+  } satisfies TopicDef<Float32MultiArray, WebScan2D | undefined>,
 
   odom: {
     name: '/hdl_odom',

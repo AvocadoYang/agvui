@@ -14,6 +14,16 @@ export interface StdBool {
   data: boolean
 }
 
+export interface StdFloat32 {
+  data: number
+}
+
+export interface Float32MultiArray {
+  layout?: { dim?: { label: string; size: number; stride: number }[]; data_offset?: number }
+  /** rosbridge 用 cbor 傳時是 Float32Array，JSON 時是 number[] */
+  data: number[] | Float32Array
+}
+
 export interface Vector3 {
   x: number
   y: number
@@ -343,4 +353,21 @@ export interface RobotPose {
   /** 由四元數換算的 yaw（弧度） */
   yaw: number
   orientation: Quaternion
+}
+
+/* ---------- /initialpose（geometry_msgs/PoseWithCovarianceStamped） ---------- */
+
+export interface PoseWithCovarianceStamped {
+  header: Header
+  pose: { pose: { position: Vector3; orientation: Quaternion }; covariance: number[] }
+}
+
+/* ---------- /kenmec_fork/web_scan_2d（車端 web_scan_2d 節點） ---------- */
+
+export interface WebScan2D {
+  /** map frame 下的 [x0, y0, x1, y1, ...]（公尺） */
+  points: Float32Array
+  frame: string
+  /** 網頁收到的時間（ms） */
+  receivedAt: number
 }
