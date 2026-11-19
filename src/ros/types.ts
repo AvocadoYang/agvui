@@ -105,7 +105,8 @@ export interface MissionReadStatus {
     warning: number
     debug: string
     task_process: number
-    action_process: string
+    action_process: string // parse 時已正規化成代碼字串
+    action_params?: Record<string, unknown> // action_process 為物件時附帶的參數
     charging: boolean
     cargo_status: number
     heartbeat: number
@@ -312,7 +313,10 @@ export interface MissionFeedback {
   warning_msg: string
   is_running: boolean
   cancel_task: boolean
-  action_process: string // 車輛正在執行的動作 (即時的)
+  /** 車輛正在執行的動作 (即時的)。原始訊息可能是 "F" 或 { fork_height: {...} }，parse 時統一轉成代碼字串 */
+  action_process: string
+  /** action_process 為物件時附帶的參數，例如 { is_define_height: 'custom', height: 350 } */
+  action_params?: Record<string, unknown>
   task_status: boolean
   [key: string]: unknown
 }

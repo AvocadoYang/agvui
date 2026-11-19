@@ -1,6 +1,6 @@
 import { Alert, Card, Descriptions, Empty, Tag, Typography } from 'antd'
 import { useTranslation } from 'react-i18next'
-import { useFeedbackFromAction, useMissionWriteStatus, useRos } from '../../hooks/useRos'
+import { useFeedbackFromAction, useHasMission, useMissionWriteStatus, useRos } from '../../hooks/useRos'
 import { TOPICS } from '../../ros/topics'
 import type { MissionWriteStatus } from '../../ros/types'
 import './MissionInfoPage.css'
@@ -29,7 +29,9 @@ export default function MissionInfoPage() {
 
   const ms = write?.action?.mission_status
   const state = write?.write ? missionState(write.write) : null
-  const currentAction = feedback?.action_process?.trim()
+  const hasMission = useHasMission()
+  // 後端任務結束後不會清空 action_process，沒任務時不顯示殘留的動作
+  const currentAction = hasMission ? feedback?.action_process?.trim() : undefined
 
   return (
     <div className="mi-page">

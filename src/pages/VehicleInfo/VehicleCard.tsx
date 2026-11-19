@@ -34,7 +34,10 @@ export function VehicleCard({ vehicle }: { vehicle: VehicleStatus | null }) {
   const writeStatus = useMissionWriteStatus()
 
   // 目前動作：優先用 mission feedback，收不到時退回 read/status 的 info.action_process
-  const action = (feedback?.feedback.action_process || readStatus?.info?.action_process || '').trim() || null
+  // 後端任務結束後不會清空 action_process，所以只在 has_mission = true 時才採用
+  const action = hasMission
+    ? (feedback?.feedback.action_process || readStatus?.info?.action_process || '').trim() || null
+    : null
   // 移動中 → 目的地 = write/status 的 action.mission_status.end
   const destination =
     action && MOVE_ACTIONS.has(action) ? writeStatus?.action?.mission_status?.end?.trim() || null : null

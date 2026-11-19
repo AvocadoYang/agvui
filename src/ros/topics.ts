@@ -34,6 +34,29 @@ export interface TopicDef<Raw, T> {
 }
 
 /** 解析 std_msgs/String 裡的 JSON，壞掉的訊息回傳 undefined（略過，不覆蓋舊值） */
+/**
+ * action_process 可能是字串 "F"，也可能是帶參數的物件 { fork_height: { is_define_height, height } }。
+ * 統一轉成 { action: 代碼字串, params: 參數物件 }，避免 UI 對物件呼叫 .trim() 而 crash。
+ */
+export function normalizeActionProcess(v: unknown): { action: string; params?: Record<string, unknown> } {
+  if (typeof v === 'string') return { action: v.trim() }
+  if (v && typeof v === 'object' && !Array.isArray(v)) {
+    const [key] = Object.keys(v)
+    if (key == null) return { action: '' }
+    const params = (v as Record<string, unknown>)[key]
+    return {
+      action: key.trim(),
+      params: params && typeof params === 'object' ? (params as Record<string, unknown>) : undefined,
+    }
+  }
+  return { action: v == null ? '' : String(v) }
+}
+
+function withAction<T extends { action_process?: unknown }>(obj: T): T {
+  const { action, params } = normalizeActionProcess(obj.action_process)
+  return { ...obj, action_process: action, action_params: params }
+}
+
 function parseJsonString<T>(raw: StdString): T | undefined {
   try {
     return JSON.parse(raw.data) as T
@@ -60,7 +83,10 @@ export const TOPICS = {
   missionReadStatus: {
     name: '/mission_control/read/status',
     messageType: 'std_msgs/String',
-    parse: (raw) => parseJsonString<MissionReadStatus>(raw),
+    parse: (raw) => {
+      const r = parseJsonString<MissionReadStatus>(raw)
+      return r?.info ? { ...r, info: withAction(r.info) } : r
+    },
   } satisfies TopicDef<StdString, MissionReadStatus | undefined>,
 
   missionWriteStatus: {
@@ -95,7 +121,7 @@ export const TOPICS = {
       const json = raw.feedback.feedback_json
       const feedback =
         typeof json === 'string' ? parseJsonString<MissionFeedback>({ data: json }) : (raw.feedback as MissionFeedback)
-      return feedback ? { ...raw, feedback } : undefined
+      return feedback ? { ...raw, feedback: withAction(feedback) } : undefined
     },
   } satisfies TopicDef<MissionActionFeedbackMsg, MissionActionFeedback | undefined>,
 
