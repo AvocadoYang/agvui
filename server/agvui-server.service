@@ -1,0 +1,22 @@
+[Unit]
+Description=AGV UI web server (port 8064)
+# 等網路就緒再啟動，避免開機太早綁不到網卡
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+# PyInstaller 打包後的執行檔（由 install-service.sh 複製過來）
+ExecStart=/usr/local/bin/agvui-server --host 0.0.0.0 --port 8064
+# 掛掉就自動重啟（例如前端檔案還沒部署時會直接 exit 1，5 秒後再試）
+Restart=always
+RestartSec=5
+
+# 不用 root 跑：每次啟動給一個臨時的系統帳號，只需要能讀 /var/kenmec/agvui
+DynamicUser=yes
+# onefile 執行檔會解壓到 /tmp，給它獨立的 /tmp
+PrivateTmp=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
