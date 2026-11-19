@@ -29,6 +29,7 @@
     "waitingData": "等待 {{topic}} 資料…",
     "rosNotConnected": "尚未連上 ROS，資料將在連線後顯示",
     "abnormalFeedback": "異常回饋：{{msg}}",
+    "listSeparator": "、",
     "front": "前方",
     "rear": "後方",
     "status": {

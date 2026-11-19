@@ -13,7 +13,7 @@ import {
 import type { VehicleStatus } from '../../ros/types'
 import { batteryColor } from '../../utils/battery'
 import { errorWarnings } from '../../utils/errorInfo'
-import { failedChecks, POSITION_CHECK } from './checks'
+import { DEVICE_CHECKS, failedChecks, POSITION_CHECK } from './checks'
 import { ForkliftAnimation } from './ForkliftAnimation'
 
 /** 移動類動作：顯示目的地 */
@@ -63,6 +63,8 @@ export function VehicleCard({ vehicle }: { vehicle: VehicleStatus | null }) {
     ...(missionWarning ? [{ id: null, msg: missionWarning }] : []),
   ].filter((w, i, all) => all.findIndex((x) => x.msg === w.msg) === i)
   const alertLevel = offline ? null : errors.length ? 'error' : warnItems.length ? 'warning' : null
+  // 異常回饋欄：下方 10 個連線設備中狀態異常的項目
+  const deviceIssues = vehicle ? DEVICE_CHECKS.filter((c) => !c.ok(vehicle)).map((c) => t(`vehicle.checksOff.${c.key}`)) : []
   const issues = [...new Set([...errors, ...warnItems.map((w) => (w.id != null ? `[${w.id}] ${w.msg}` : w.msg))])]
 
   return (
@@ -161,9 +163,9 @@ export function VehicleCard({ vehicle }: { vehicle: VehicleStatus | null }) {
       </div>
 
       {/* 異常回饋：車輛卡片外、下方靠左，與設備狀態格（定位狀況）左緣對齊 */}
-      {vehicle?.abnormal_feedback && (
+      {deviceIssues.length > 0 && (
         <div className="vc-abnormal" role="alert">
-          <WarningOutlined /> {t('vehicle.abnormalFeedback', { msg: vehicle.abnormal_feedback })}
+          <WarningOutlined /> {t('vehicle.abnormalFeedback', { msg: deviceIssues.join(t('vehicle.listSeparator')) })}
         </div>
       )}
     </>

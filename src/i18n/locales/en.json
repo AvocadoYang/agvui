@@ -29,6 +29,7 @@
     "waitingData": "Waiting for {{topic}}…",
     "rosNotConnected": "ROS not connected. Data will appear once connected.",
     "abnormalFeedback": "Abnormal feedback: {{msg}}",
+    "listSeparator": ", ",
     "front": "Front",
     "rear": "Rear",
     "status": {
